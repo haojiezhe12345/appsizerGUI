@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,7 +23,7 @@ namespace appsizerGUI
             foreach (Process pList in Process.GetProcesses())
                 if (pList.MainWindowTitle == wName)
                     return pList.MainWindowHandle;
-
+            MessageBox.Show("Window not found");
             return IntPtr.Zero;
         }
         [DllImport("user32.dll")]
@@ -36,6 +36,8 @@ namespace appsizerGUI
             public int Bottom { get; set; }
         }
         IntPtr handle;
+        int a = 7;
+        int taskbarHeight = 30;
         public void updateRightBottom()
         {
             int screenwidth = Screen.PrimaryScreen.Bounds.Width;
@@ -64,10 +66,10 @@ namespace appsizerGUI
             handle = getWinHandle(windowname);
             Rect pos = new Rect();
             GetWindowRect(handle, ref pos);
-            x.Value = pos.Left + 7;
+            x.Value = pos.Left + a;
             y.Value = pos.Top;
-            w.Value = pos.Right - pos.Left - 14;
-            h.Value = pos.Bottom - pos.Top;
+            w.Value = pos.Right - pos.Left - a * 2;
+            h.Value = pos.Bottom - pos.Top - a;
             updateRightBottom();
             addValueChangedHandler();
         }
@@ -80,7 +82,7 @@ namespace appsizerGUI
             int width = (int)w.Value;
             int height = (int)h.Value;
             updateRightBottom();
-            SetWindowPos(handle, IntPtr.Zero, left - 7, top, width + 14, height, 0);
+            SetWindowPos(handle, IntPtr.Zero, left - a, top, width + a * 2, height + a, 0);
         }
         private void centerWin(object sender, EventArgs e)
         {
@@ -90,14 +92,13 @@ namespace appsizerGUI
             int width = (int)w.Value;
             int height = (int)h.Value;
             int left = (screenwidth - width) / 2;
-            int top = (screenheight - height) / 2;
+            int top = (screenheight - height - taskbarHeight) / 2;
             x.Value = left;
             y.Value = top;
             updateRightBottom();
-            SetWindowPos(handle, IntPtr.Zero, left - 7, top, width + 14, height, 0);
+            SetWindowPos(handle, IntPtr.Zero, left - a, top, width + a * 2, height + a, 0);
             addValueChangedHandler();
         }
-
         private void listWin(object sender, EventArgs e)
         {
             window.Items.Clear();
@@ -105,10 +106,24 @@ namespace appsizerGUI
                 if (!String.IsNullOrEmpty(pList.MainWindowTitle))
                     window.Items.Add(pList.MainWindowTitle);
         }
-
         private void exit(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+        private void toggleCalibrate(object sender, EventArgs e)
+        {
+            if (calibrate.Checked == true)
+                a = 7;
+            else
+                a = 0;
+            refreshPos(null, null);
+        }
+        private void toggleAboveTaskbar(object sender, EventArgs e)
+        {
+            if (abovetaskbar.Checked == true)
+                taskbarHeight = 30;
+            else
+                taskbarHeight = 0;
         }
     }
 }
