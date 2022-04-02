@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 
 namespace appsizerGUI
@@ -20,6 +22,7 @@ namespace appsizerGUI
         }
         public static IntPtr getWinHandle(string wName)
         {
+            Cursor.Current = Cursors.WaitCursor;
             foreach (Process pList in Process.GetProcesses())
                 if (pList.MainWindowTitle == wName)
                     return pList.MainWindowHandle;
@@ -51,6 +54,7 @@ namespace appsizerGUI
             y.ValueChanged -= new EventHandler(setPos);
             w.ValueChanged -= new EventHandler(setPos);
             h.ValueChanged -= new EventHandler(setPos);
+            calibrate.CheckedChanged -= new EventHandler(toggleCalibrate);
         }
         public void addValueChangedHandler()
         {
@@ -58,12 +62,32 @@ namespace appsizerGUI
             y.ValueChanged += new EventHandler(setPos);
             w.ValueChanged += new EventHandler(setPos);
             h.ValueChanged += new EventHandler(setPos);
+            calibrate.CheckedChanged += new EventHandler(toggleCalibrate);
+        }
+        private static List<string> GetSetting(string key)
+        {
+            ConfigurationManager.RefreshSection("appSettings");
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            var value = ConfigurationManager.AppSettings[key];
+            if (value == null)
+                value = "[]";
+            string[] array = js.Deserialize<string[]>(value);
+            return array.OfType<string>().ToList();
+        }
+        private static void SetSetting(string key, List<string> value)
+        {
+            var jsonSerialiser = new JavaScriptSerializer();
+            var json = jsonSerialiser.Serialize(value);
+            Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+            config.AppSettings.Settings.Remove(key);
+            config.AppSettings.Settings.Add(key, json);
+            config.Save(ConfigurationSaveMode.Modified);
+            ConfigurationManager.RefreshSection("appSettings");
         }
         private void refreshPos(object sender, EventArgs e)
         {
             removeValueChangedHandler();
-            string windowname = window.Text;
-            handle = getWinHandle(windowname);
+            handle = getWinHandle(window.Text);
             Rect pos = new Rect();
             GetWindowRect(handle, ref pos);
             x.Value = pos.Left + a;
@@ -101,10 +125,22 @@ namespace appsizerGUI
         }
         private void listWin(object sender, EventArgs e)
         {
-            window.Items.Clear();
+            Cursor.Current = Cursors.WaitCursor;
+            winlist.DropDownItems.Clear();
             foreach (Process pList in Process.GetProcesses())
                 if (!String.IsNullOrEmpty(pList.MainWindowTitle))
-                    window.Items.Add(pList.MainWindowTitle);
+                {
+                    ToolStripMenuItem item = new ToolStripMenuItem();
+                    item.Text = pList.MainWindowTitle;
+                    item.Click += new EventHandler(selectWin);
+                    winlist.DropDownItems.Add(item);
+                }
+        }
+        private void selectWin(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            window.Text = item.Text;
+            refreshPos(null, null);
         }
         private void exit(object sender, EventArgs e)
         {
@@ -124,6 +160,64 @@ namespace appsizerGUI
                 taskbarHeight = 30;
             else
                 taskbarHeight = 0;
+        }
+        private void saveWin(object sender, EventArgs e)
+        {
+            if (window.Text == "savedWindows")
+            {
+                MessageBox.Show("Saving window named \"savedWindows\" is not supported");
+                return;
+            }
+            Cursor.Current = Cursors.WaitCursor;
+            var savedWindows = GetSetting("savedWindows");
+            savedWindows.Add(window.Text);
+            savedWindows = savedWindows.Distinct().ToList();
+            SetSetting("savedWindows", savedWindows);
+            List<string> winSetting = new List<string>();
+            winSetting.Add(((int)x.Value).ToString());
+            winSetting.Add(((int)y.Value).ToString());
+            winSetting.Add(((int)w.Value).ToString());
+            winSetting.Add(((int)h.Value).ToString());
+            winSetting.Add(calibrate.Checked.ToString());
+            SetSetting(window.Text, winSetting);
+            System.Threading.Thread.Sleep(65);
+            Cursor.Current = Cursors.Arrow;
+        }
+        private void listSavedWin(object sender, EventArgs e)
+        {
+            window.Items.Clear();
+            var savedWindows = GetSetting("savedWindows");
+            foreach (string wname in savedWindows)
+            {
+                window.Items.Add(wname);
+            }
+        }
+        private void loadSavedWin(object sender, EventArgs e)
+        {
+            removeValueChangedHandler();
+            var winSetting = GetSetting(window.Text);
+            x.Value = Int32.Parse(winSetting[0]);
+            y.Value = Int32.Parse(winSetting[1]);
+            w.Value = Int32.Parse(winSetting[2]);
+            h.Value = Int32.Parse(winSetting[3]);
+            calibrate.Checked = bool.Parse(winSetting[4]);
+            handle = getWinHandle(window.Text);
+            if (calibrate.Checked == true)
+                a = 7;
+            else
+                a = 0;
+            updateRightBottom();
+            addValueChangedHandler();
+        }
+        private void removeWin(object sender, EventArgs e)
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            var savedWindows = GetSetting("savedWindows");
+            savedWindows = savedWindows.Distinct().ToList();
+            savedWindows.Remove(window.Text);
+            SetSetting("savedWindows", savedWindows);
+            System.Threading.Thread.Sleep(40);
+            Cursor.Current = Cursors.Arrow;
         }
     }
 }

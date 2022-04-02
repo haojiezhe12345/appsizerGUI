@@ -29,13 +29,11 @@ namespace appsizerGUI
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
+            this.winlist = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItem6 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
+            this.abovetaskbar = new System.Windows.Forms.ToolStripMenuItem();
             this.window = new System.Windows.Forms.ComboBox();
             this.b = new System.Windows.Forms.Label();
             this.r = new System.Windows.Forms.Label();
@@ -49,12 +47,10 @@ namespace appsizerGUI
             this.label2 = new System.Windows.Forms.Label();
             this.x = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
+            this.calibrate = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
-            this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
-            this.abovetaskbar = new System.Windows.Forms.ToolStripMenuItem();
-            this.calibrate = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.h)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.w)).BeginInit();
@@ -66,66 +62,54 @@ namespace appsizerGUI
             // 
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Menu;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem4,
-            this.toolStripMenuItem1,
-            this.toolStripMenuItem7});
+            this.winlist,
+            this.toolStripMenuItem7,
+            this.toolStripMenuItem9,
+            this.toolStripMenuItem1});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(329, 24);
             this.menuStrip1.TabIndex = 13;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // toolStripMenuItem4
+            // winlist
             // 
-            this.toolStripMenuItem4.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem5});
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(37, 20);
-            this.toolStripMenuItem4.Text = "File";
+            this.winlist.Name = "winlist";
+            this.winlist.Size = new System.Drawing.Size(95, 20);
+            this.winlist.Text = "Select window";
+            this.winlist.DropDownOpening += new System.EventHandler(this.listWin);
             // 
-            // toolStripMenuItem5
+            // toolStripMenuItem9
             // 
-            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
-            this.toolStripMenuItem5.Size = new System.Drawing.Size(93, 22);
-            this.toolStripMenuItem5.Text = "Exit";
-            this.toolStripMenuItem5.Click += new System.EventHandler(this.exit);
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(43, 20);
+            this.toolStripMenuItem9.Text = "Save";
+            this.toolStripMenuItem9.Click += new System.EventHandler(this.saveWin);
             // 
             // toolStripMenuItem1
             // 
-            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem2,
-            this.toolStripSeparator1,
-            this.toolStripMenuItem6,
-            this.toolStripMenuItem3});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(54, 20);
-            this.toolStripMenuItem1.Text = "Action";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(62, 20);
+            this.toolStripMenuItem1.Text = "Remove";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.removeWin);
             // 
-            // toolStripMenuItem2
+            // toolStripMenuItem7
             // 
-            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem2.Text = "Refresh";
-            this.toolStripMenuItem2.Click += new System.EventHandler(this.refreshPos);
+            this.toolStripMenuItem7.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.abovetaskbar});
+            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
+            this.toolStripMenuItem7.Size = new System.Drawing.Size(61, 20);
+            this.toolStripMenuItem7.Text = "Options";
             // 
-            // toolStripSeparator1
+            // abovetaskbar
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
-            // 
-            // toolStripMenuItem6
-            // 
-            this.toolStripMenuItem6.Name = "toolStripMenuItem6";
-            this.toolStripMenuItem6.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem6.Text = "Apply";
-            this.toolStripMenuItem6.Click += new System.EventHandler(this.setPos);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "Put to center";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.centerWin);
+            this.abovetaskbar.Checked = true;
+            this.abovetaskbar.CheckOnClick = true;
+            this.abovetaskbar.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.abovetaskbar.Name = "abovetaskbar";
+            this.abovetaskbar.Size = new System.Drawing.Size(230, 22);
+            this.abovetaskbar.Text = "Center window above taskbar";
+            this.abovetaskbar.Click += new System.EventHandler(this.toggleAboveTaskbar);
             // 
             // window
             // 
@@ -133,10 +117,10 @@ namespace appsizerGUI
             this.window.Location = new System.Drawing.Point(12, 30);
             this.window.Name = "window";
             this.window.Size = new System.Drawing.Size(305, 21);
-            this.window.TabIndex = 14;
+            this.window.TabIndex = 0;
             this.window.Text = "Type or select a window by title...";
-            this.window.DropDown += new System.EventHandler(this.listWin);
-            this.window.SelectedIndexChanged += new System.EventHandler(this.refreshPos);
+            this.window.DropDown += new System.EventHandler(this.listSavedWin);
+            this.window.SelectedIndexChanged += new System.EventHandler(this.loadSavedWin);
             // 
             // b
             // 
@@ -189,7 +173,7 @@ namespace appsizerGUI
             -2147483648});
             this.h.Name = "h";
             this.h.Size = new System.Drawing.Size(60, 20);
-            this.h.TabIndex = 22;
+            this.h.TabIndex = 4;
             // 
             // label3
             // 
@@ -215,7 +199,7 @@ namespace appsizerGUI
             -2147483648});
             this.w.Name = "w";
             this.w.Size = new System.Drawing.Size(60, 20);
-            this.w.TabIndex = 20;
+            this.w.TabIndex = 3;
             // 
             // label4
             // 
@@ -241,7 +225,7 @@ namespace appsizerGUI
             -2147483648});
             this.y.Name = "y";
             this.y.Size = new System.Drawing.Size(60, 20);
-            this.y.TabIndex = 18;
+            this.y.TabIndex = 2;
             // 
             // label2
             // 
@@ -267,7 +251,7 @@ namespace appsizerGUI
             -2147483648});
             this.x.Name = "x";
             this.x.Size = new System.Drawing.Size(60, 20);
-            this.x.TabIndex = 16;
+            this.x.TabIndex = 1;
             // 
             // label1
             // 
@@ -278,70 +262,55 @@ namespace appsizerGUI
             this.label1.TabIndex = 15;
             this.label1.Text = "X:";
             // 
+            // calibrate
+            // 
+            this.calibrate.AutoSize = true;
+            this.calibrate.Checked = true;
+            this.calibrate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.calibrate.Location = new System.Drawing.Point(12, 118);
+            this.calibrate.Name = "calibrate";
+            this.calibrate.Size = new System.Drawing.Size(288, 17);
+            this.calibrate.TabIndex = 5;
+            this.calibrate.Text = "Use -7 pixel calibration (useful for native window border)";
+            this.calibrate.UseVisualStyleBackColor = true;
+            this.calibrate.CheckedChanged += new System.EventHandler(this.toggleCalibrate);
+            // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(54, 120);
+            this.button1.Location = new System.Drawing.Point(54, 142);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(60, 23);
-            this.button1.TabIndex = 27;
+            this.button1.TabIndex = 6;
             this.button1.Text = "Refresh";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.refreshPos);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(134, 120);
+            this.button2.Location = new System.Drawing.Point(134, 142);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(60, 23);
-            this.button2.TabIndex = 28;
+            this.button2.TabIndex = 7;
             this.button2.Text = "Center";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.centerWin);
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(214, 120);
+            this.button3.Location = new System.Drawing.Point(214, 142);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(60, 23);
-            this.button3.TabIndex = 29;
+            this.button3.TabIndex = 8;
             this.button3.Text = "Apply";
             this.button3.UseVisualStyleBackColor = true;
             this.button3.Click += new System.EventHandler(this.setPos);
-            // 
-            // toolStripMenuItem7
-            // 
-            this.toolStripMenuItem7.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.abovetaskbar,
-            this.calibrate});
-            this.toolStripMenuItem7.Name = "toolStripMenuItem7";
-            this.toolStripMenuItem7.Size = new System.Drawing.Size(61, 20);
-            this.toolStripMenuItem7.Text = "Options";
-            // 
-            // abovetaskbar
-            // 
-            this.abovetaskbar.Checked = true;
-            this.abovetaskbar.CheckOnClick = true;
-            this.abovetaskbar.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.abovetaskbar.Name = "abovetaskbar";
-            this.abovetaskbar.Size = new System.Drawing.Size(230, 22);
-            this.abovetaskbar.Text = "Center window above taskbar";
-            this.abovetaskbar.Click += new System.EventHandler(this.toggleAboveTaskbar);
-            // 
-            // calibrate
-            // 
-            this.calibrate.Checked = true;
-            this.calibrate.CheckOnClick = true;
-            this.calibrate.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.calibrate.Name = "calibrate";
-            this.calibrate.Size = new System.Drawing.Size(230, 22);
-            this.calibrate.Text = "Use -7 pixel calibration";
-            this.calibrate.CheckedChanged += new System.EventHandler(this.toggleCalibrate);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 153);
+            this.ClientSize = new System.Drawing.Size(329, 175);
+            this.Controls.Add(this.calibrate);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -377,13 +346,6 @@ namespace appsizerGUI
 
         #endregion
         private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem6;
         private System.Windows.Forms.ComboBox window;
         private System.Windows.Forms.Label b;
         private System.Windows.Forms.Label r;
@@ -397,12 +359,15 @@ namespace appsizerGUI
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown x;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
+        private System.Windows.Forms.ToolStripMenuItem abovetaskbar;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem9;
+        private System.Windows.Forms.ToolStripMenuItem winlist;
+        private System.Windows.Forms.CheckBox calibrate;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem7;
-        private System.Windows.Forms.ToolStripMenuItem abovetaskbar;
-        private System.Windows.Forms.ToolStripMenuItem calibrate;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
     }
 }
 
