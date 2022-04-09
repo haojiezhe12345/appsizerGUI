@@ -30,10 +30,10 @@ namespace appsizerGUI
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.winlist = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem7 = new System.Windows.Forms.ToolStripMenuItem();
             this.abovetaskbar = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem9 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.window = new System.Windows.Forms.ComboBox();
             this.b = new System.Windows.Forms.Label();
             this.r = new System.Windows.Forms.Label();
@@ -79,20 +79,6 @@ namespace appsizerGUI
             this.winlist.Text = "Select window";
             this.winlist.DropDownOpening += new System.EventHandler(this.listWin);
             // 
-            // toolStripMenuItem9
-            // 
-            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
-            this.toolStripMenuItem9.Size = new System.Drawing.Size(43, 20);
-            this.toolStripMenuItem9.Text = "Save";
-            this.toolStripMenuItem9.Click += new System.EventHandler(this.saveWin);
-            // 
-            // toolStripMenuItem1
-            // 
-            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(62, 20);
-            this.toolStripMenuItem1.Text = "Remove";
-            this.toolStripMenuItem1.Click += new System.EventHandler(this.removeWin);
-            // 
             // toolStripMenuItem7
             // 
             this.toolStripMenuItem7.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -110,6 +96,20 @@ namespace appsizerGUI
             this.abovetaskbar.Size = new System.Drawing.Size(230, 22);
             this.abovetaskbar.Text = "Center window above taskbar";
             this.abovetaskbar.Click += new System.EventHandler(this.toggleAboveTaskbar);
+            // 
+            // toolStripMenuItem9
+            // 
+            this.toolStripMenuItem9.Name = "toolStripMenuItem9";
+            this.toolStripMenuItem9.Size = new System.Drawing.Size(43, 20);
+            this.toolStripMenuItem9.Text = "Save";
+            this.toolStripMenuItem9.Click += new System.EventHandler(this.saveWin);
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(62, 20);
+            this.toolStripMenuItem1.Text = "Remove";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.removeWin);
             // 
             // window
             // 
@@ -328,8 +328,9 @@ namespace appsizerGUI
             this.Controls.Add(this.label1);
             this.Controls.Add(this.window);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
             this.Name = "Form1";
             this.Text = "appsizerGUI";
             this.TopMost = true;
