@@ -87,7 +87,10 @@ namespace appsizerGUI
         private void refreshPos(object sender, EventArgs e)
         {
             removeValueChangedHandler();
-            handle = getWinHandle(window.Text);
+            if (sender == null)
+            {
+                handle = getWinHandle(window.Text);
+            }
             Rect pos = new Rect();
             GetWindowRect(handle, ref pos);
             x.Value = pos.Left + a;
@@ -132,6 +135,7 @@ namespace appsizerGUI
                 {
                     ToolStripMenuItem item = new ToolStripMenuItem();
                     item.Text = pList.MainWindowTitle;
+                    item.Tag = pList.MainWindowHandle;
                     item.Click += new EventHandler(selectWin);
                     winlist.DropDownItems.Add(item);
                 }
@@ -140,7 +144,8 @@ namespace appsizerGUI
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             window.Text = item.Text;
-            refreshPos(null, null);
+            handle = (IntPtr)item.Tag;
+            refreshPos(0, null);
         }
         private void exit(object sender, EventArgs e)
         {
@@ -152,7 +157,7 @@ namespace appsizerGUI
                 a = 7;
             else
                 a = 0;
-            refreshPos(null, null);
+            refreshPos(0, null);
         }
         private void toggleAboveTaskbar(object sender, EventArgs e)
         {
