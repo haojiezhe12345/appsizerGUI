@@ -31,6 +31,9 @@ namespace appsizerGUI
         }
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool IsWindow(IntPtr hWnd);
         public struct Rect
         {
             public int Left { get; set; }
@@ -87,7 +90,7 @@ namespace appsizerGUI
         private void refreshPos(object sender, EventArgs e)
         {
             removeValueChangedHandler();
-            if (sender == null)
+            if (sender == null || !IsWindow(handle))
             {
                 handle = getWinHandle(window.Text);
             }
