@@ -72,18 +72,13 @@ namespace appsizerGUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            if (currentWindow.GetPosition())
+            if (!currentWindow.GetPosition())
             {
-                UpdateView();
+                currentWindow.FindWindow();
+                currentWindow.GetPosition();
             }
-            else if (currentWindow.FindWindow() && currentWindow.GetPosition())
-            {
-                UpdateView();
-            }
-            else
-            {
-                MessageBox.Show("Window not found");
-            }
+
+            UpdateView();
 
             Cursor.Current = Cursors.Arrow;
         }
@@ -103,6 +98,10 @@ namespace appsizerGUI
 
             useCalibration.Checked = currentWindow.BorderWidth != 0;
 
+            statusLabel.Text = currentWindow.IsValid
+                ? $"{currentWindow.ProcessName} ({currentWindow.Pid}) - {currentWindow.Class} (0x{currentWindow.Handle.ToInt64():X})"
+                : "Window not found!";
+
             UpdateWindowControlsEnabledStatus();
 
             uiUpdateHandlerEnabled = true;
@@ -111,10 +110,13 @@ namespace appsizerGUI
         private void UpdateWindowControlsEnabledStatus()
         {
             var enabled = currentWindow != null;
+
             foreach (var control in windowOperationControls)
             {
                 control.Enabled = enabled;
             }
+
+            if (!enabled) statusLabel.Text = "Please select a window first!";
         }
 
         private void SaveCurrentWindow(object sender, EventArgs e)
@@ -155,11 +157,7 @@ namespace appsizerGUI
             Cursor.Current = Cursors.WaitCursor;
 
             currentWindow = config.SavedWindows[savedWindowSelector.SelectedIndex];
-
-            if (!currentWindow.FindWindow())
-            {
-                MessageBox.Show("Window not found");
-            }
+            currentWindow.FindWindow();
 
             UpdateView();
 

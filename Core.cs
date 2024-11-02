@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -39,19 +38,24 @@ namespace appsizerGUI
             public int Right => ScreenWidth - X - Width;
             [XmlIgnore]
             public int Bottom => ScreenHeight - Y - Height;
-            public int BorderWidth { get; set; } = 7;
+            public int BorderWidth { get; set; }
 
             [XmlIgnore]
             public bool IsValid => IsWindow(Handle);
 
             public bool GetPosition()
             {
-                if (GetWindowRect(Handle, out Rect rect))
+                if (GetWindowRect(Handle, out Rect windowRect) && GetClientRect(Handle, out Rect clientRect))
                 {
-                    X = rect.Left + BorderWidth;
-                    Y = rect.Top;
-                    Width = rect.Right - rect.Left - BorderWidth * 2;
-                    Height = rect.Bottom - rect.Top - BorderWidth;
+                    var windowWidth = windowRect.Right - windowRect.Left;
+                    var clientWidth = clientRect.Right - clientRect.Left;
+                    BorderWidth = (windowWidth - clientWidth) / 2 * 7 / 8;
+
+                    X = windowRect.Left + BorderWidth;
+                    Y = windowRect.Top;
+                    Width = windowRect.Right - windowRect.Left - BorderWidth * 2;
+                    Height = windowRect.Bottom - windowRect.Top - BorderWidth;
+
                     return true;
                 }
                 else return false;
@@ -113,12 +117,17 @@ namespace appsizerGUI
 
             public static Config Load()
             {
-                if (!File.Exists(ConfigFilePath)) return new Config();
-
-                var serializer = new XmlSerializer(typeof(Config));
-                using (var reader = XmlReader.Create(ConfigFilePath))
+                try
                 {
-                    return (Config)serializer.Deserialize(reader);
+                    var serializer = new XmlSerializer(typeof(Config));
+                    using (var reader = XmlReader.Create(ConfigFilePath))
+                    {
+                        return (Config)serializer.Deserialize(reader);
+                    }
+                }
+                catch
+                {
+                    return new Config();
                 }
             }
         }

@@ -28,6 +28,8 @@ namespace appsizerGUI
 
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hwnd, out Rect lpRect);
+        [DllImport("user32.dll")]
+        public static extern bool GetClientRect(IntPtr hwnd, out Rect lpRect);
         public struct Rect
         {
             public int Left { get; set; }
