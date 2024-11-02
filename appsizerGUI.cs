@@ -51,7 +51,7 @@ namespace appsizerGUI
         private void OnToggleCalibrate(object sender, EventArgs e)
         {
             if (!uiUpdateHandlerEnabled) return;
-            currentWindow.BorderWidth = useCalibration.Checked ? 7 : 0;
+            //currentWindow.Border = useCalibration.Checked ? 7 : 0;
             RefreshPosition();
         }
 
@@ -96,7 +96,8 @@ namespace appsizerGUI
             windowRight.Text = currentWindow.Right.ToString();
             windowBottom.Text = currentWindow.Bottom.ToString();
 
-            useCalibration.Checked = currentWindow.BorderWidth != 0;
+            useCalibration.Checked = currentWindow.Border.Left != 0;
+            useCalibration.Text = $"Calibrate invisible native window border ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
 
             statusLabel.Text = currentWindow.IsValid
                 ? $"{currentWindow.ProcessName} ({currentWindow.Pid}) - {currentWindow.Class} (0x{currentWindow.Handle.ToInt64():X})"

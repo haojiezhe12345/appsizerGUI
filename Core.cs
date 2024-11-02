@@ -38,7 +38,7 @@ namespace appsizerGUI
             public int Right => ScreenWidth - X - Width;
             [XmlIgnore]
             public int Bottom => ScreenHeight - Y - Height;
-            public int BorderWidth { get; set; }
+            public Rect Border { get; set; }
 
             [XmlIgnore]
             public bool IsValid => IsWindow(Handle);
@@ -47,14 +47,34 @@ namespace appsizerGUI
             {
                 if (GetWindowRect(Handle, out Rect windowRect) && GetClientRect(Handle, out Rect clientRect))
                 {
-                    var windowWidth = windowRect.Right - windowRect.Left;
-                    var clientWidth = clientRect.Right - clientRect.Left;
-                    BorderWidth = (windowWidth - clientWidth) / 2 * 7 / 8;
+                    var windowStyle = GetWindowLong(Handle, GWL_STYLE);
 
-                    X = windowRect.Left + BorderWidth;
-                    Y = windowRect.Top;
-                    Width = windowRect.Right - windowRect.Left - BorderWidth * 2;
-                    Height = windowRect.Bottom - windowRect.Top - BorderWidth;
+                    if ((windowStyle & WS_MINIMIZE) == WS_MINIMIZE)
+                    {
+                        Border = new Rect { Top = 0, Left = 0, Right = 0, Bottom = 0 };
+                    }
+                    else
+                    {
+                        var windowWidth = windowRect.Right - windowRect.Left;
+                        var clientWidth = clientRect.Right - clientRect.Left;
+                        var borderWidth = (windowWidth - clientWidth) / 2;
+
+                        if ((windowStyle & WS_MAXIMIZE) == WS_MAXIMIZE)
+                        {
+                            Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
+                        }
+                        else
+                        {
+                            borderWidth = borderWidth * 7 / 8;
+                            Border = new Rect { Top = 0, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
+                        }
+
+                    }
+
+                    X = windowRect.Left + Border.Left;
+                    Y = windowRect.Top + Border.Top;
+                    Width = windowRect.Right - windowRect.Left - Border.Left - Border.Right;
+                    Height = windowRect.Bottom - windowRect.Top - Border.Top - Border.Bottom;
 
                     return true;
                 }
@@ -63,17 +83,12 @@ namespace appsizerGUI
 
             public bool SetPosition(int x, int y, int width, int height)
             {
-                if (SetWindowPos(Handle, IntPtr.Zero, x - BorderWidth, y, width + BorderWidth * 2, height + BorderWidth, SWP_NOZORDER))
-                {
-                    GetPosition();
-                    return true;
-                }
-                else return false;
+                return SetWindowPos(Handle, IntPtr.Zero, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, SWP_NOZORDER) && GetPosition();
             }
 
             public bool SetPosition()
             {
-                return SetWindowPos(Handle, IntPtr.Zero, X - BorderWidth, Y, Width + BorderWidth * 2, Height + BorderWidth, SWP_NOZORDER);
+                return SetPosition(X, Y, Width, Height);
             }
 
             public bool PutToCenter(bool aboveTaskbar = false)
