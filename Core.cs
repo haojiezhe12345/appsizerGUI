@@ -5,8 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml.Serialization;
 using System.Xml;
+using System.Xml.Serialization;
 using static appsizerGUI.DLLImports;
 
 namespace appsizerGUI
@@ -20,6 +20,8 @@ namespace appsizerGUI
 
         public static Config config = Config.Load();
         public static Window currentWindow;
+
+        public static bool enableWindowBorderCalibration = true;
 
         public class Window
         {
@@ -41,6 +43,7 @@ namespace appsizerGUI
             public int Right => ScreenWidth - X - Width;
             [XmlIgnore]
             public int Bottom => ScreenHeight - Y - Height;
+            [XmlIgnore]
             public Rect Border { get; set; }
 
             [XmlIgnore]
@@ -50,29 +53,7 @@ namespace appsizerGUI
             {
                 if (GetWindowRect(Handle, out Rect windowRect) && GetClientRect(Handle, out Rect clientRect))
                 {
-                    var windowStyle = GetWindowLong(Handle, GWL_STYLE);
-
-                    if ((windowStyle & WS_MINIMIZE) == WS_MINIMIZE)
-                    {
-                        Border = new Rect { Top = 0, Left = 0, Right = 0, Bottom = 0 };
-                    }
-                    else
-                    {
-                        var windowWidth = windowRect.Right - windowRect.Left;
-                        var clientWidth = clientRect.Right - clientRect.Left;
-                        var borderWidth = (windowWidth - clientWidth) / 2;
-
-                        if ((windowStyle & WS_MAXIMIZE) == WS_MAXIMIZE)
-                        {
-                            Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
-                        }
-                        else
-                        {
-                            borderWidth = borderWidth * 7 / 8;
-                            Border = new Rect { Top = 0, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
-                        }
-
-                    }
+                    GetWindowBorder(windowRect, clientRect);
 
                     X = windowRect.Left + Border.Left;
                     Y = windowRect.Top + Border.Top;
@@ -84,14 +65,65 @@ namespace appsizerGUI
                 else return false;
             }
 
+            public void GetWindowBorder(Rect windowRect, Rect clientRect)
+            {
+                var windowStyle = GetWindowStyle();
+
+                if (windowStyle.Is(WindowStyles.WS_MINIMIZE) || !enableWindowBorderCalibration)
+                {
+                    Border = new Rect { Top = 0, Left = 0, Right = 0, Bottom = 0 };
+                }
+                else
+                {
+                    var windowWidth = windowRect.Right - windowRect.Left;
+                    var clientWidth = clientRect.Right - clientRect.Left;
+                    var borderWidth = (windowWidth - clientWidth) / 2;
+
+                    if (windowStyle.Is(WindowStyles.WS_MAXIMIZE))
+                    {
+                        Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
+                    }
+                    else
+                    {
+                        borderWidth = borderWidth * 7 / 8;
+                        Border = new Rect { Top = 0, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
+                    }
+                }
+            }
+
+            public bool GetWindowBorder()
+            {
+                if (GetWindowRect(Handle, out Rect windowRect) && GetClientRect(Handle, out Rect clientRect))
+                {
+                    GetWindowBorder(windowRect, clientRect);
+                    return true;
+                }
+                return false;
+            }
+
+            public WindowStyle GetWindowStyle()
+            {
+                return new WindowStyle(GetWindowLong(Handle, GWL_STYLE));
+            }
+
             public bool SetPosition(int x, int y, int width, int height)
             {
-                return SetWindowPos(Handle, IntPtr.Zero, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, SWP_NOZORDER) && GetPosition();
+                return
+                    GetWindowBorder()
+                    && SetWindowPos(Handle, IntPtr.Zero, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, SWP_NOZORDER)
+                    && GetPosition();
             }
 
             public bool SetPosition()
             {
                 return SetPosition(X, Y, Width, Height);
+            }
+
+            public int SetWindowStyle(WindowStyle style)
+            {
+                var result = SetWindowLong(Handle, GWL_STYLE, style.Style);
+                GetPosition();
+                return result;
             }
 
             public bool PutToCenter(bool aboveTaskbar = false)
@@ -119,11 +151,39 @@ namespace appsizerGUI
             }
         }
 
+        public class WindowStyle
+        {
+            public int Style { get; set; }
+
+            public WindowStyle() { }
+            public WindowStyle(int style) => Style = style;
+
+            public bool Is(WindowStyles style) => (Style & (int)style) == (int)style;
+            public void Set(WindowStyles style, bool value) => Style = value ? Style | (int)style : (Style & ~(int)style);
+        }
+
+        public enum WindowStyles
+        {
+            WS_MAXIMIZE = 0x01000000,
+            WS_MINIMIZE = 0x20000000,
+            WS_CAPTION = 0x00C00000,
+            WS_VISIBLE = 0x10000000,
+            WS_DISABLED = 0x08000000,
+            WS_SIZEBOX = 0x00040000,
+        }
+
+        public class DesktopProfile
+        {
+            public string Name { get; set; }
+            public List<Window> Windows { get; set; } = new List<Window>();
+        }
+
         public class Config
         {
             public List<Window> SavedWindows { get; set; } = new List<Window>();
+            public List<DesktopProfile> DesktopProfiles { get; set; } = new List<DesktopProfile>();
 
-            public static readonly string ConfigFilePath = "appsizerGUI_config.xml";
+            public const string ConfigFilePath = "appsizerGUI_config.xml";
 
             public void Save()
             {

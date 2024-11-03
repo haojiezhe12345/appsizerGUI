@@ -44,9 +44,9 @@ namespace appsizerGUI
 
         [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        public static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
         public const int GWL_STYLE = -16;
-        public const int WS_MAXIMIZE = 0x01000000;
-        public const int WS_MINIMIZE = 0x20000000;
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]

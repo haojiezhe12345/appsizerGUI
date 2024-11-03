@@ -28,10 +28,16 @@ namespace appsizerGUI
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuWindowSelect = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveDesktop = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuRestoreFrom = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.useAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
+            this.useCalibration = new System.Windows.Forms.ToolStripMenuItem();
             this.savedWindowSelector = new System.Windows.Forms.ComboBox();
             this.windowBottom = new System.Windows.Forms.Label();
             this.windowRight = new System.Windows.Forms.Label();
@@ -45,20 +51,25 @@ namespace appsizerGUI
             this.label2 = new System.Windows.Forms.Label();
             this.windowX = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
-            this.useCalibration = new System.Windows.Forms.CheckBox();
             this.btnRefresh = new System.Windows.Forms.Button();
-            this.btnCenter = new System.Windows.Forms.Button();
+            this.btnWindowTools = new System.Windows.Forms.Button();
             this.btnApply = new System.Windows.Forms.Button();
             this.btnSaveWindow = new System.Windows.Forms.Button();
             this.btnRemoveWindow = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.windowToolsMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolsStyleSeparatorStart = new System.Windows.Forms.ToolStripSeparator();
+            this.windowToolsStyleSeparatorEnd = new System.Windows.Forms.ToolStripSeparator();
+            this.windowToolsBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowX)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.windowToolsMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -66,6 +77,7 @@ namespace appsizerGUI
             this.menuStrip1.BackColor = System.Drawing.SystemColors.Menu;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuWindowSelect,
+            this.toolStripMenuItem1,
             this.menuOptions});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -80,10 +92,41 @@ namespace appsizerGUI
             this.menuWindowSelect.Text = "Select window";
             this.menuWindowSelect.DropDownOpening += new System.EventHandler(this.ListWindows);
             // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuSaveDesktop,
+            this.menuRestoreFrom});
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(62, 20);
+            this.toolStripMenuItem1.Text = "Desktop";
+            this.toolStripMenuItem1.DropDownOpening += new System.EventHandler(this.OnListDesktopProfiles);
+            // 
+            // menuSaveDesktop
+            // 
+            this.menuSaveDesktop.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2});
+            this.menuSaveDesktop.Name = "menuSaveDesktop";
+            this.menuSaveDesktop.Size = new System.Drawing.Size(238, 22);
+            this.menuSaveDesktop.Text = "Save all open window as";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(157, 22);
+            this.toolStripMenuItem2.Text = "< New profile >";
+            // 
+            // menuRestoreFrom
+            // 
+            this.menuRestoreFrom.Name = "menuRestoreFrom";
+            this.menuRestoreFrom.Size = new System.Drawing.Size(238, 22);
+            this.menuRestoreFrom.Text = "Restore window positions from";
+            // 
             // menuOptions
             // 
             this.menuOptions.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.useAboveTaskbar});
+            this.useAboveTaskbar,
+            this.useCalibration});
             this.menuOptions.Name = "menuOptions";
             this.menuOptions.Size = new System.Drawing.Size(61, 20);
             this.menuOptions.Text = "Options";
@@ -94,15 +137,25 @@ namespace appsizerGUI
             this.useAboveTaskbar.CheckOnClick = true;
             this.useAboveTaskbar.CheckState = System.Windows.Forms.CheckState.Checked;
             this.useAboveTaskbar.Name = "useAboveTaskbar";
-            this.useAboveTaskbar.Size = new System.Drawing.Size(230, 22);
+            this.useAboveTaskbar.Size = new System.Drawing.Size(352, 22);
             this.useAboveTaskbar.Text = "Center window above taskbar";
+            // 
+            // useCalibration
+            // 
+            this.useCalibration.CheckOnClick = true;
+            this.useCalibration.Name = "useCalibration";
+            this.useCalibration.Size = new System.Drawing.Size(352, 22);
+            this.useCalibration.Text = "Auto calibrate Windows 10\'s invisible window border";
+            this.useCalibration.CheckedChanged += new System.EventHandler(this.OnToggleCalibrate);
             // 
             // savedWindowSelector
             // 
+            this.savedWindowSelector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.savedWindowSelector.FormattingEnabled = true;
             this.savedWindowSelector.Location = new System.Drawing.Point(12, 30);
             this.savedWindowSelector.Name = "savedWindowSelector";
-            this.savedWindowSelector.Size = new System.Drawing.Size(256, 21);
+            this.savedWindowSelector.Size = new System.Drawing.Size(254, 21);
             this.savedWindowSelector.TabIndex = 0;
             this.savedWindowSelector.Text = "Type or select a window by title...";
             this.savedWindowSelector.DropDown += new System.EventHandler(this.ListSavedWindows);
@@ -252,22 +305,10 @@ namespace appsizerGUI
             this.label1.TabIndex = 15;
             this.label1.Text = "X:";
             // 
-            // useCalibration
-            // 
-            this.useCalibration.AutoSize = true;
-            this.useCalibration.Checked = true;
-            this.useCalibration.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.useCalibration.Location = new System.Drawing.Point(12, 118);
-            this.useCalibration.Name = "useCalibration";
-            this.useCalibration.Size = new System.Drawing.Size(288, 17);
-            this.useCalibration.TabIndex = 7;
-            this.useCalibration.Text = "Use -7 pixel calibration (useful for native window border)";
-            this.useCalibration.UseVisualStyleBackColor = true;
-            this.useCalibration.CheckedChanged += new System.EventHandler(this.OnToggleCalibrate);
-            // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(54, 142);
+            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRefresh.Location = new System.Drawing.Point(11, 117);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(60, 23);
             this.btnRefresh.TabIndex = 8;
@@ -275,19 +316,22 @@ namespace appsizerGUI
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.OnRefreshClicked);
             // 
-            // btnCenter
+            // btnWindowTools
             // 
-            this.btnCenter.Location = new System.Drawing.Point(134, 142);
-            this.btnCenter.Name = "btnCenter";
-            this.btnCenter.Size = new System.Drawing.Size(60, 23);
-            this.btnCenter.TabIndex = 9;
-            this.btnCenter.Text = "Center";
-            this.btnCenter.UseVisualStyleBackColor = true;
-            this.btnCenter.Click += new System.EventHandler(this.OnCenterClicked);
+            this.btnWindowTools.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnWindowTools.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnWindowTools.Location = new System.Drawing.Point(192, 117);
+            this.btnWindowTools.Name = "btnWindowTools";
+            this.btnWindowTools.Size = new System.Drawing.Size(60, 23);
+            this.btnWindowTools.TabIndex = 9;
+            this.btnWindowTools.Text = "Tools";
+            this.btnWindowTools.UseVisualStyleBackColor = true;
+            this.btnWindowTools.Click += new System.EventHandler(this.OnWindowToolsClick);
             // 
             // btnApply
             // 
-            this.btnApply.Location = new System.Drawing.Point(214, 142);
+            this.btnApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnApply.Location = new System.Drawing.Point(258, 117);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(60, 23);
             this.btnApply.TabIndex = 10;
@@ -297,7 +341,8 @@ namespace appsizerGUI
             // 
             // btnSaveWindow
             // 
-            this.btnSaveWindow.Location = new System.Drawing.Point(272, 29);
+            this.btnSaveWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSaveWindow.Location = new System.Drawing.Point(270, 29);
             this.btnSaveWindow.Name = "btnSaveWindow";
             this.btnSaveWindow.Size = new System.Drawing.Size(23, 23);
             this.btnSaveWindow.TabIndex = 1;
@@ -307,7 +352,8 @@ namespace appsizerGUI
             // 
             // btnRemoveWindow
             // 
-            this.btnRemoveWindow.Location = new System.Drawing.Point(297, 29);
+            this.btnRemoveWindow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRemoveWindow.Location = new System.Drawing.Point(295, 29);
             this.btnRemoveWindow.Name = "btnRemoveWindow";
             this.btnRemoveWindow.Size = new System.Drawing.Size(23, 23);
             this.btnRemoveWindow.TabIndex = 2;
@@ -319,7 +365,7 @@ namespace appsizerGUI
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 173);
+            this.statusStrip1.Location = new System.Drawing.Point(0, 147);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(329, 22);
             this.statusStrip1.SizingGrip = false;
@@ -332,17 +378,50 @@ namespace appsizerGUI
             this.statusLabel.Size = new System.Drawing.Size(39, 17);
             this.statusLabel.Text = "Ready";
             // 
+            // windowToolsMenu
+            // 
+            this.windowToolsMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem3,
+            this.windowToolsStyleSeparatorStart,
+            this.windowToolsStyleSeparatorEnd,
+            this.windowToolsBorder});
+            this.windowToolsMenu.Name = "windowToolsMenu";
+            this.windowToolsMenu.Size = new System.Drawing.Size(181, 82);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Text = "Put to center";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
+            // 
+            // windowToolsStyleSeparatorStart
+            // 
+            this.windowToolsStyleSeparatorStart.Name = "windowToolsStyleSeparatorStart";
+            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(177, 6);
+            // 
+            // windowToolsStyleSeparatorEnd
+            // 
+            this.windowToolsStyleSeparatorEnd.Name = "windowToolsStyleSeparatorEnd";
+            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(177, 6);
+            // 
+            // windowToolsBorder
+            // 
+            this.windowToolsBorder.Enabled = false;
+            this.windowToolsBorder.Name = "windowToolsBorder";
+            this.windowToolsBorder.Size = new System.Drawing.Size(180, 22);
+            this.windowToolsBorder.Text = "Border: (-, -, -, -)";
+            // 
             // appsizerGUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(329, 195);
+            this.ClientSize = new System.Drawing.Size(329, 169);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnRemoveWindow);
             this.Controls.Add(this.btnSaveWindow);
-            this.Controls.Add(this.useCalibration);
             this.Controls.Add(this.btnApply);
-            this.Controls.Add(this.btnCenter);
+            this.Controls.Add(this.btnWindowTools);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.windowBottom);
             this.Controls.Add(this.windowRight);
@@ -372,6 +451,7 @@ namespace appsizerGUI
             ((System.ComponentModel.ISupportInitialize)(this.windowX)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.windowToolsMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -395,14 +475,23 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem menuOptions;
         private System.Windows.Forms.ToolStripMenuItem useAboveTaskbar;
         private System.Windows.Forms.ToolStripMenuItem menuWindowSelect;
-        private System.Windows.Forms.CheckBox useCalibration;
         private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.Button btnCenter;
+        private System.Windows.Forms.Button btnWindowTools;
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.Button btnSaveWindow;
         private System.Windows.Forms.Button btnRemoveWindow;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.ToolStripMenuItem useCalibration;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveDesktop;
+        private System.Windows.Forms.ToolStripMenuItem menuRestoreFrom;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ContextMenuStrip windowToolsMenu;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripSeparator windowToolsStyleSeparatorStart;
+        private System.Windows.Forms.ToolStripMenuItem windowToolsBorder;
+        private System.Windows.Forms.ToolStripSeparator windowToolsStyleSeparatorEnd;
     }
 }
 

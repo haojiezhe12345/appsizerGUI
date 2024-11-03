@@ -13,9 +13,11 @@ namespace appsizerGUI
         {
             InitializeComponent();
 
-            Control[] controls = { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, useCalibration, btnRefresh, btnCenter, btnApply };
+            Control[] controls = { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, btnRefresh, btnWindowTools, btnApply };
             windowOperationControls = controls;
             UpdateWindowControlsEnabledStatus();
+
+            useCalibration.Checked = enableWindowBorderCalibration;
         }
 
         private Control[] windowOperationControls;
@@ -57,23 +59,10 @@ namespace appsizerGUI
             RefreshPosition();
         }
 
-        private void OnToggleCalibrate(object sender, EventArgs e)
-        {
-            if (!uiUpdateHandlerEnabled) return;
-            //currentWindow.Border = useCalibration.Checked ? 7 : 0;
-            RefreshPosition();
-        }
-
         private void OnSetPosition(object sender, EventArgs e)
         {
             if (!uiUpdateHandlerEnabled) return;
             currentWindow.SetPosition((int)windowX.Value, (int)windowY.Value, (int)windowWidth.Value, (int)windowHeight.Value);
-            UpdateView();
-        }
-
-        private void OnCenterClicked(object sender, EventArgs e)
-        {
-            currentWindow.PutToCenter(useAboveTaskbar.Checked);
             UpdateView();
         }
 
@@ -104,9 +93,6 @@ namespace appsizerGUI
             windowHeight.Value = currentWindow.Height;
             windowRight.Text = currentWindow.Right.ToString();
             windowBottom.Text = currentWindow.Bottom.ToString();
-
-            useCalibration.Checked = currentWindow.Border.Left != 0;
-            useCalibration.Text = $"Calibrate invisible native window border ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
 
             statusLabel.Text = currentWindow.IsValid
                 ? $"{currentWindow.ProcessName} ({currentWindow.Pid}) - {currentWindow.Class} (0x{currentWindow.Handle.ToInt64():X})"
@@ -174,9 +160,52 @@ namespace appsizerGUI
             Cursor.Current = Cursors.Arrow;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void OnListDesktopProfiles(object sender, EventArgs e)
         {
 
+        }
+
+        private void OnToggleCalibrate(object sender, EventArgs e)
+        {
+            enableWindowBorderCalibration = useCalibration.Checked;
+        }
+
+        private void OnWindowToolsClick(object sender, EventArgs e)
+        {
+            windowToolsBorder.Text = $"Border: ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
+
+            var windowStyle = currentWindow.GetWindowStyle();
+
+            while (windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd) - windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) > 1)
+            {
+                windowToolsMenu.Items.RemoveAt(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) + 1);
+            }
+
+            foreach (int style in Enum.GetValues(typeof(WindowStyles)))
+            {
+                var menuItem = new ToolStripMenuItem()
+                {
+                    Text = ((WindowStyles)style).ToString(),
+                    Checked = windowStyle.Is((WindowStyles)style),
+                    CheckOnClick = true,
+                };
+                menuItem.CheckedChanged += new EventHandler((_s, _e) =>
+                {
+                    windowStyle.Set((WindowStyles)style, menuItem.Checked);
+                    currentWindow.SetWindowStyle(windowStyle);
+                    UpdateView();
+                });
+
+                windowToolsMenu.Items.Insert(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd), menuItem);
+            }
+
+            windowToolsMenu.Show(btnWindowTools, new Point(btnWindowTools.Width, btnWindowTools.Height), ToolStripDropDownDirection.Left);
+        }
+
+        private void OnCenterClicked(object sender, EventArgs e)
+        {
+            currentWindow.PutToCenter(useAboveTaskbar.Checked);
+            UpdateView();
         }
     }
 }
