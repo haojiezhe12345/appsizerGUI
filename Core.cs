@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -22,7 +23,9 @@ namespace appsizerGUI
 
         public class Window
         {
-            public string ProcessName { get; set; }
+            public string ProcessPath { get; set; }
+            [XmlIgnore]
+            public string ProcessName => Path.GetFileName(ProcessPath);
             [XmlIgnore]
             public uint Pid { get; set; }
             public string Title { get; set; }
@@ -105,7 +108,10 @@ namespace appsizerGUI
                 var window = GetWindowList().FirstOrDefault(x => x.Title == Title);
                 if (window != null)
                 {
+                    ProcessPath = window.ProcessPath;
                     Pid = window.Pid;
+                    Title = window.Title;
+                    Class = window.Class;
                     Handle = window.Handle;
                     return true;
                 }
@@ -166,10 +172,17 @@ namespace appsizerGUI
                         GetClassName(hWnd, className, className.Capacity);
 
                         GetWindowThreadProcessId(hWnd, out uint pid);
+                        var process = processes.FirstOrDefault(p => p.Id == pid);
+
+                        var ProcessPath = new StringBuilder(1024);
+                        {
+                            var readSize = ProcessPath.Capacity;
+                            QueryFullProcessImageName(process.Handle, 0, ProcessPath, ref readSize);
+                        }
 
                         var window = new Window
                         {
-                            ProcessName = processes.FirstOrDefault(p => p.Id == pid).ProcessName ?? "",
+                            ProcessPath = ProcessPath.ToString(),
                             Pid = pid,
                             Title = windowTitle.ToString(),
                             Class = className.ToString(),

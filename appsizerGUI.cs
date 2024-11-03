@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using static appsizerGUI.Core;
@@ -27,9 +28,17 @@ namespace appsizerGUI
 
             foreach (var window in GetWindowList().OrderBy(x => x.Title))
             {
+                Bitmap image = null;
+                try
+                {
+                    image = Icon.ExtractAssociatedIcon(window.ProcessPath).ToBitmap();
+                }
+                catch { }
+
                 var menuItem = new ToolStripMenuItem
                 {
                     Text = $"{window.Title}  [{window.ProcessName} ({window.Pid}) - 0x{window.Handle.ToInt64():X}]",
+                    Image = image,
                 };
                 menuItem.Click += new EventHandler((_s, _e) =>
                 {

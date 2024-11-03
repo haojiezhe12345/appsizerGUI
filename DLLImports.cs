@@ -26,6 +26,10 @@ namespace appsizerGUI
         [DllImport("user32.dll")]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, ref int lpdwSize);
+
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hwnd, out Rect lpRect);
         [DllImport("user32.dll")]
@@ -38,7 +42,7 @@ namespace appsizerGUI
             public int Bottom { get; set; }
         }
 
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll")]
         public static extern int GetWindowLong(IntPtr hWnd, int nIndex);
         public const int GWL_STYLE = -16;
         public const int WS_MAXIMIZE = 0x01000000;
