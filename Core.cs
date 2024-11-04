@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -216,7 +215,6 @@ namespace appsizerGUI
         public static List<Window> GetWindowList()
         {
             var windows = new List<Window>();
-            var processes = Process.GetProcesses();
 
             EnumWindows(delegate (IntPtr hWnd, IntPtr lParam)
             {
@@ -232,12 +230,13 @@ namespace appsizerGUI
                         GetClassName(hWnd, className, className.Capacity);
 
                         GetWindowThreadProcessId(hWnd, out uint pid);
-                        var process = processes.FirstOrDefault(p => p.Id == pid);
 
                         var ProcessPath = new StringBuilder(1024);
                         {
+                            var hProcess = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, false, pid);
                             var readSize = ProcessPath.Capacity;
-                            QueryFullProcessImageName(process.Handle, 0, ProcessPath, ref readSize);
+                            QueryFullProcessImageName(hProcess, 0, ProcessPath, ref readSize);
+                            CloseHandle(hProcess);
                         }
 
                         var window = new Window
