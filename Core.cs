@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -64,9 +65,19 @@ namespace appsizerGUI
                 else return false;
             }
 
+            public bool SetPosition(int x, int y, int width, int height, bool bringToFront = true)
+            {
+                return
+                    GetWindowBorder()
+                    && (bringToFront
+                        ? SetWindowPos(Handle, IntPtr.Zero, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, 0)
+                        : MoveWindow(Handle, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, true))
+                    && GetPosition();
+            }
+
             public void GetWindowBorder(Rect windowRect, Rect clientRect)
             {
-                var windowStyle = GetWindowStyle();
+                var windowStyle = GetWindowStyle<WindowStyles>();
 
                 if (windowStyle.Is(WindowStyles.WS_MINIMIZE) || !enableWindowBorderCalibration)
                 {
@@ -100,29 +111,27 @@ namespace appsizerGUI
                 return false;
             }
 
-            public WindowStyle GetWindowStyle()
+            public WindowStyle<T> GetWindowStyle<T>() where T : Enum
             {
-                return new WindowStyle(GetWindowLong(Handle, GWL_STYLE));
+                return new WindowStyle<T>(GetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE));
             }
 
-            public bool SetPosition(int x, int y, int width, int height)
+            public Task<int> SetWindowStyle<T>(WindowStyle<T> style) where T : Enum
             {
-                return
-                    GetWindowBorder()
-                    && SetWindowPos(Handle, IntPtr.Zero, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, SWP_NOZORDER)
-                    && GetPosition();
+                return Task.Run(async () =>
+                {
+                    var result = SetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE, style.Style);
+
+                    await Task.Delay(10);
+
+                    GetPosition();
+                    return result;
+                });
             }
 
-            public bool SetPosition()
+            public bool SetAlwaysOnTop(bool value)
             {
-                return SetPosition(X, Y, Width, Height);
-            }
-
-            public int SetWindowStyle(WindowStyle style)
-            {
-                var result = SetWindowLong(Handle, GWL_STYLE, style.Style);
-                GetPosition();
-                return result;
+                return SetWindowPos(Handle, (IntPtr)(value ? -1 : -2), 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
             }
 
             public bool PutToCenter(bool aboveTaskbar = false)
@@ -132,6 +141,18 @@ namespace appsizerGUI
                       ((aboveTaskbar ? WorkingAreaHeight : ScreenHeight) - Height) / 2,
                       Width, Height
                   );
+            }
+
+            public async Task MakeBorderless()
+            {
+                var windowStyle = GetWindowStyle<WindowStyles>();
+
+                windowStyle.Set(WindowStyles.WS_SIZEBOX, false);
+                windowStyle.Set(WindowStyles.WS_CAPTION, false);
+
+                await SetWindowStyle(windowStyle);
+
+                SetPosition(0, 0, ScreenWidth, ScreenHeight);
             }
 
             public bool FindWindow()
@@ -150,15 +171,24 @@ namespace appsizerGUI
             }
         }
 
-        public class WindowStyle
+        public class WindowStyle<T> where T : Enum
         {
             public int Style { get; set; }
 
             public WindowStyle() { }
             public WindowStyle(int style) => Style = style;
 
-            public bool Is(WindowStyles style) => (Style & (int)style) == (int)style;
-            public void Set(WindowStyles style, bool value) => Style = value ? Style | (int)style : (Style & ~(int)style);
+            public bool Is(T style)
+            {
+                var s = Convert.ToInt32(style);
+                return (Style & s) == s;
+            }
+
+            public void Set(T style, bool value)
+            {
+                var s = Convert.ToInt32(style);
+                Style = value ? Style | s : (Style & ~s);
+            }
         }
 
         public enum WindowStyles
@@ -166,9 +196,21 @@ namespace appsizerGUI
             WS_MAXIMIZE = 0x01000000,
             WS_MINIMIZE = 0x20000000,
             WS_CAPTION = 0x00C00000,
+            WS_SYSMENU = 0x00080000,
+            WS_SIZEBOX = 0x00040000,
+            WS_MAXIMIZEBOX = 0x00010000,
+            WS_MINIMIZEBOX = 0x00020000,
             WS_VISIBLE = 0x10000000,
             WS_DISABLED = 0x08000000,
-            WS_SIZEBOX = 0x00040000,
+        }
+
+        public enum WindowExStyles
+        {
+            WS_EX_TOPMOST = 0x00000008,
+            WS_EX_TOOLWINDOW = 0x00000080,
+            WS_EX_WINDOWEDGE = 0x00000100,
+            WS_EX_CLIENTEDGE = 0x00000200,
+            WS_EX_APPWINDOW = 0x00040000,
         }
 
         public class DesktopProfile

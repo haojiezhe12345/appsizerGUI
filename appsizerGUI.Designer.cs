@@ -60,9 +60,11 @@ namespace appsizerGUI
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.windowToolsMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolsStyleSeparatorStart = new System.Windows.Forms.ToolStripSeparator();
             this.windowToolsStyleSeparatorEnd = new System.Windows.Forms.ToolStripSeparator();
             this.windowToolsBorder = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolsAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
@@ -382,35 +384,52 @@ namespace appsizerGUI
             // 
             this.windowToolsMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem3,
+            this.toolStripMenuItem4,
+            this.windowToolsAlwaysOnTop,
             this.windowToolsStyleSeparatorStart,
             this.windowToolsStyleSeparatorEnd,
             this.windowToolsBorder});
             this.windowToolsMenu.Name = "windowToolsMenu";
-            this.windowToolsMenu.Size = new System.Drawing.Size(181, 82);
+            this.windowToolsMenu.Size = new System.Drawing.Size(183, 126);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(182, 22);
             this.toolStripMenuItem3.Text = "Put to center";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
+            // 
+            // toolStripMenuItem4
+            // 
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(182, 22);
+            this.toolStripMenuItem4.Text = "Borderless fullscreen";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.OnBorderlessClicked);
             // 
             // windowToolsStyleSeparatorStart
             // 
             this.windowToolsStyleSeparatorStart.Name = "windowToolsStyleSeparatorStart";
-            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(177, 6);
+            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(179, 6);
             // 
             // windowToolsStyleSeparatorEnd
             // 
             this.windowToolsStyleSeparatorEnd.Name = "windowToolsStyleSeparatorEnd";
-            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(177, 6);
+            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(179, 6);
             // 
             // windowToolsBorder
             // 
             this.windowToolsBorder.Enabled = false;
             this.windowToolsBorder.Name = "windowToolsBorder";
-            this.windowToolsBorder.Size = new System.Drawing.Size(180, 22);
+            this.windowToolsBorder.Size = new System.Drawing.Size(182, 22);
             this.windowToolsBorder.Text = "Border: (-, -, -, -)";
+            // 
+            // windowToolsAlwaysOnTop
+            // 
+            this.windowToolsAlwaysOnTop.CheckOnClick = true;
+            this.windowToolsAlwaysOnTop.Name = "windowToolsAlwaysOnTop";
+            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(182, 22);
+            this.windowToolsAlwaysOnTop.Text = "Always on top";
+            this.windowToolsAlwaysOnTop.Click += new System.EventHandler(this.OnAlwaysOnTopClicked);
             // 
             // appsizerGUI
             // 
@@ -492,6 +511,8 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripSeparator windowToolsStyleSeparatorStart;
         private System.Windows.Forms.ToolStripMenuItem windowToolsBorder;
         private System.Windows.Forms.ToolStripSeparator windowToolsStyleSeparatorEnd;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem windowToolsAlwaysOnTop;
     }
 }
 

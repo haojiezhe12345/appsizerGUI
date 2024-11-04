@@ -172,40 +172,62 @@ namespace appsizerGUI
 
         private void OnWindowToolsClick(object sender, EventArgs e)
         {
-            windowToolsBorder.Text = $"Border: ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
-
-            var windowStyle = currentWindow.GetWindowStyle();
-
             while (windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd) - windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) > 1)
             {
                 windowToolsMenu.Items.RemoveAt(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) + 1);
             }
 
-            foreach (int style in Enum.GetValues(typeof(WindowStyles)))
+            var windowStyle = currentWindow.GetWindowStyle<WindowStyles>();
+            var windowExStyle = currentWindow.GetWindowStyle<WindowExStyles>();
+
+            windowToolsAlwaysOnTop.Checked = windowExStyle.Is(WindowExStyles.WS_EX_TOPMOST);
+
+            AddWindowStylesToWindowTools(windowStyle);
+            AddWindowStylesToWindowTools(windowExStyle);
+
+            windowToolsBorder.Text = $"Border: ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
+
+            windowToolsMenu.Show(btnWindowTools, new Point(btnWindowTools.Width, btnWindowTools.Height), ToolStripDropDownDirection.Left);
+        }
+
+        private void AddWindowStylesToWindowTools<T>(WindowStyle<T> windowStyle) where T : Enum
+        {
+            foreach (var styleName in Enum.GetNames(typeof(T)))
             {
+                var styleEnum = (T)Enum.Parse(typeof(T), styleName);
+
                 var menuItem = new ToolStripMenuItem()
                 {
-                    Text = ((WindowStyles)style).ToString(),
-                    Checked = windowStyle.Is((WindowStyles)style),
+                    Text = styleName,
+                    Checked = windowStyle.Is(styleEnum),
                     CheckOnClick = true,
                 };
-                menuItem.CheckedChanged += new EventHandler((_s, _e) =>
+                menuItem.CheckedChanged += new EventHandler(async (_s, _e) =>
                 {
-                    windowStyle.Set((WindowStyles)style, menuItem.Checked);
-                    currentWindow.SetWindowStyle(windowStyle);
+                    windowStyle.Set(styleEnum, menuItem.Checked);
+                    await currentWindow.SetWindowStyle(windowStyle);
                     UpdateView();
                 });
 
                 windowToolsMenu.Items.Insert(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd), menuItem);
             }
-
-            windowToolsMenu.Show(btnWindowTools, new Point(btnWindowTools.Width, btnWindowTools.Height), ToolStripDropDownDirection.Left);
         }
 
         private void OnCenterClicked(object sender, EventArgs e)
         {
             currentWindow.PutToCenter(useAboveTaskbar.Checked);
             UpdateView();
+        }
+
+        private async void OnBorderlessClicked(object sender, EventArgs e)
+        {
+            await currentWindow.MakeBorderless();
+            UpdateView();
+        }
+
+        private void OnAlwaysOnTopClicked(object sender, EventArgs e)
+        {
+            currentWindow.SetAlwaysOnTop(windowToolsAlwaysOnTop.Checked);
         }
     }
 }
