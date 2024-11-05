@@ -52,6 +52,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="appsizerGUI_DesktopProfileAddDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="appsizerGUI_DesktopProfileAddDialog.Designer.cs">
+      <DependentUpon>appsizerGUI_DesktopProfileAddDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Core.cs" />
     <Compile Include="DLLImports.cs" />
     <Compile Include="appsizerGUI.cs">
@@ -65,6 +71,9 @@
     <EmbeddedResource Include="appsizerGUI.resx">
       <DependentUpon>appsizerGUI.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="appsizerGUI_DesktopProfileAddDialog.resx">
+      <DependentUpon>appsizerGUI_DesktopProfileAddDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

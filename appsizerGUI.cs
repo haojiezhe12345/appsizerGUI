@@ -177,7 +177,8 @@ namespace appsizerGUI
             var menuSaveToNew = new ToolStripMenuItem("< New profile >");
             menuSaveToNew.Click += (_s, _e) =>
             {
-                SaveDesktop("Profile 01");
+                var profileAddFrom = new appsizerGUI_DesktopProfileAddDialog();
+                profileAddFrom.ShowDialog();
             };
             menuSaveDesktop.DropDownItems.Add(menuSaveToNew);
 
