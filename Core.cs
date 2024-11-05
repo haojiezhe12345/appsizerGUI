@@ -28,12 +28,16 @@ namespace appsizerGUI
             public string ProcessPath { get; set; }
             [XmlIgnore]
             public string ProcessName => Path.GetFileName(ProcessPath);
-            [XmlIgnore]
             public uint Pid { get; set; }
             public string Title { get; set; }
             public string Class { get; set; }
             [XmlIgnore]
             public IntPtr Handle { get; set; }
+            public int Handle_Int
+            {
+                get => Handle.ToInt32();
+                set => Handle = (IntPtr)value;
+            }
 
             public int X { get; set; }
             public int Y { get; set; }
@@ -73,6 +77,13 @@ namespace appsizerGUI
                         ? SetWindowPos(Handle, IntPtr.Zero, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, 0)
                         : MoveWindow(Handle, x - Border.Left, y - Border.Top, width + Border.Left + Border.Right, height + Border.Top + Border.Bottom, true))
                     && GetPosition();
+            }
+
+            public bool SetPosition()
+            {
+                return
+                    GetWindowBorder()
+                    && MoveWindow(Handle, X - Border.Left, Y - Border.Top, Width + Border.Left + Border.Right, Height + Border.Top + Border.Bottom, true);
             }
 
             public void GetWindowBorder(Rect windowRect, Rect clientRect)
@@ -157,7 +168,34 @@ namespace appsizerGUI
 
             public bool FindWindow()
             {
-                var window = GetWindowList().FirstOrDefault(x => x.Title == Title);
+                Window window = null;
+
+                var windowList = GetWindowList();
+
+                var windows = windowList.Where(x => x.Title == Title);
+                if (!windows.Any())
+                {
+                    windows = windowList.Where(x => x.ProcessName == ProcessName && x.Class == Class);
+                }
+
+                if (windows.Count() == 1)
+                {
+                    window = windows.First();
+                }
+                else if (windows.Count() > 1)
+                {
+                    windows = windows.Where(x => x.ProcessName == ProcessName && x.Class == Class);
+
+                    if (windows.Count() == 1)
+                    {
+                        window = windows.First();
+                    }
+                    else if (windows.Count() > 1)
+                    {
+                        window = windows.Where(x => x.Handle == Handle).FirstOrDefault() ?? windows.First();
+                    }
+                }
+
                 if (window != null)
                 {
                     ProcessPath = window.ProcessPath;
@@ -297,6 +335,50 @@ namespace appsizerGUI
             }, IntPtr.Zero);
 
             return windows;
+        }
+
+        public static void SetCurrentWindow(int index)
+        {
+            currentWindow = config.SavedWindows[index];
+            currentWindow.FindWindow();
+        }
+
+        public static void SaveDesktop(string profileName)
+        {
+            config.Reload();
+
+            var windows = GetWindowList();
+            windows.ForEach(w => w.GetPosition());
+
+            var profile = new DesktopProfile
+            {
+                Name = profileName,
+                Windows = windows
+            };
+
+            var extstingProfileIndex = config.DesktopProfiles.FindIndex(x => x.Name == profileName);
+
+            if (extstingProfileIndex >= 0)
+            {
+                config.DesktopProfiles[extstingProfileIndex] = profile;
+            }
+            else
+            {
+                config.DesktopProfiles.Add(profile);
+            }
+
+            config.Save();
+        }
+
+        public static void RestoreDesktop(string profileName)
+        {
+            var profile = config.DesktopProfiles.First(x => x.Name == profileName);
+
+            foreach (var window in profile.Windows)
+            {
+                window.FindWindow();
+                window.SetPosition();
+            }
         }
     }
 }

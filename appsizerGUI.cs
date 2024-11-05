@@ -163,9 +163,7 @@ namespace appsizerGUI
         {
             Cursor.Current = Cursors.WaitCursor;
 
-            currentWindow = config.SavedWindows[savedWindowSelector.SelectedIndex];
-            currentWindow.FindWindow();
-
+            SetCurrentWindow(savedWindowSelector.SelectedIndex);
             UpdateView();
 
             Cursor.Current = Cursors.Arrow;
@@ -173,7 +171,42 @@ namespace appsizerGUI
 
         private void OnListDesktopProfiles(object sender, EventArgs e)
         {
+            menuSaveDesktop.DropDownItems.Clear();
+            menuRestoreDesktop.DropDownItems.Clear();
 
+            var menuSaveToNew = new ToolStripMenuItem("< New profile >");
+            menuSaveToNew.Click += (_s, _e) =>
+            {
+                SaveDesktop("Profile 01");
+            };
+            menuSaveDesktop.DropDownItems.Add(menuSaveToNew);
+
+            if (config.DesktopProfiles.Count == 0)
+            {
+                var menuNoProfile = new ToolStripMenuItem()
+                {
+                    Text = "No saved profiles...",
+                    Enabled = false
+                };
+                menuRestoreDesktop.DropDownItems.Add(menuNoProfile);
+            }
+
+            foreach (var desktop in config.DesktopProfiles)
+            {
+                var menuItemSave = new ToolStripMenuItem(desktop.Name);
+                menuItemSave.Click += (_s, _e) =>
+                {
+                    SaveDesktop(desktop.Name);
+                };
+                menuSaveDesktop.DropDownItems.Add(menuItemSave);
+
+                var menuItemLoad = new ToolStripMenuItem(desktop.Name);
+                menuItemLoad.Click += (_s, _e) =>
+                {
+                    RestoreDesktop(desktop.Name);
+                };
+                menuRestoreDesktop.DropDownItems.Add(menuItemLoad);
+            }
         }
 
         private void OnToggleCalibrate(object sender, EventArgs e)
