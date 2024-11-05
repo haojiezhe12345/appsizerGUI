@@ -18,6 +18,8 @@ namespace appsizerGUI
             UpdateWindowControlsEnabledStatus();
 
             useCalibration.Checked = enableWindowBorderCalibration;
+
+            btnWindowTools.AddDownTriangle();
         }
 
         private Control[] windowOperationControls;
@@ -112,7 +114,15 @@ namespace appsizerGUI
                 control.Enabled = enabled;
             }
 
-            if (!enabled) statusLabel.Text = "Please select a window first!";
+            if (enabled)
+            {
+                uiUpdateHandlerEnabled = true;
+            }
+            else
+            {
+                uiUpdateHandlerEnabled = false;
+                statusLabel.Text = "Please select a window first!";
+            }
         }
 
         private void SaveCurrentWindow(object sender, EventArgs e)
@@ -168,6 +178,8 @@ namespace appsizerGUI
         private void OnToggleCalibrate(object sender, EventArgs e)
         {
             enableWindowBorderCalibration = useCalibration.Checked;
+            if (!uiUpdateHandlerEnabled) return;
+            RefreshPosition();
         }
 
         private void OnWindowToolsClick(object sender, EventArgs e)
@@ -228,6 +240,31 @@ namespace appsizerGUI
         private void OnAlwaysOnTopClicked(object sender, EventArgs e)
         {
             currentWindow.SetAlwaysOnTop(windowToolsAlwaysOnTop.Checked);
+        }
+    }
+
+    public static class ButtonIconExtensions
+    {
+        public static void AddDownTriangle(this Button button, ContentAlignment align = ContentAlignment.MiddleRight)
+        {
+            int triangleHeight = (int)Math.Round(button.Height * 6.0 / 23.0);
+
+            Bitmap triangleDown = new Bitmap(triangleHeight * 2 - 1, triangleHeight);
+
+            using (Graphics g = Graphics.FromImage(triangleDown))
+            {
+                g.FillPolygon(
+                    new SolidBrush(Color.Black),
+                    new[] {
+                        new Point(1, 1),
+                        new Point(triangleDown.Width - 1, 0),
+                        new Point(triangleDown.Width / 2, triangleDown.Height),
+                    }
+                );
+            }
+
+            button.Image = triangleDown;
+            button.ImageAlign = align;
         }
     }
 }
