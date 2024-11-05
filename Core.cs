@@ -116,7 +116,7 @@ namespace appsizerGUI
                 return new WindowStyle<T>(GetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE));
             }
 
-            public Task<int> SetWindowStyle<T>(WindowStyle<T> style) where T : Enum
+            public Task<int> SetWindowStyleAsync<T>(WindowStyle<T> style) where T : Enum
             {
                 return Task.Run(async () =>
                 {
@@ -150,7 +150,7 @@ namespace appsizerGUI
                 windowStyle.Set(WindowStyles.WS_SIZEBOX, false);
                 windowStyle.Set(WindowStyles.WS_CAPTION, false);
 
-                await SetWindowStyle(windowStyle);
+                await SetWindowStyleAsync(windowStyle);
 
                 SetPosition(0, 0, ScreenWidth, ScreenHeight);
             }

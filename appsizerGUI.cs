@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using static appsizerGUI.Core;
 
@@ -44,11 +45,11 @@ namespace appsizerGUI
                     Text = $"{window.Title}  [{window.ProcessName} ({window.Pid}) - 0x{window.Handle.ToInt64():X}]",
                     Image = image,
                 };
-                menuItem.Click += new EventHandler((_s, _e) =>
+                menuItem.Click += (_s, _e) =>
                 {
                     currentWindow = window;
                     RefreshPosition();
-                });
+                };
 
                 menuWindowSelect.DropDownItems.Add(menuItem);
             }
@@ -214,12 +215,12 @@ namespace appsizerGUI
                     Checked = windowStyle.Is(styleEnum),
                     CheckOnClick = true,
                 };
-                menuItem.CheckedChanged += new EventHandler(async (_s, _e) =>
+                menuItem.CheckedChanged += async (sender, e) =>
                 {
                     windowStyle.Set(styleEnum, menuItem.Checked);
-                    await currentWindow.SetWindowStyle(windowStyle);
+                    await currentWindow.SetWindowStyleAsync(windowStyle);
                     UpdateView();
-                });
+                };
 
                 windowToolsMenu.Items.Insert(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd), menuItem);
             }
@@ -247,25 +248,36 @@ namespace appsizerGUI
     {
         public static void AddDownTriangle(this Button button, ContentAlignment align = ContentAlignment.MiddleRight)
         {
-            int triangleHeight = (int)Math.Round(button.Height * 6.0 / 23.0);
-
-            Bitmap triangleDown = new Bitmap(triangleHeight * 2 - 1, triangleHeight);
-
-            using (var g = Graphics.FromImage(triangleDown))
-            using (var brush = new SolidBrush(Color.Black))
-            {
-                g.FillPolygon(
-                    brush,
-                    new[] {
-                        new Point(1, 1),
-                        new Point(triangleDown.Width - 1, 0),
-                        new Point(triangleDown.Width / 2, triangleDown.Height),
-                    }
-                );
-            }
-
-            button.Image = triangleDown;
             button.ImageAlign = align;
+            button.Paint += DrawTriangleAsync;
+        }
+
+        public static void DrawTriangleAsync(object sender, EventArgs e)
+        {
+            var button = (Button)sender;
+
+            Task.Run(() =>
+            {
+                Task.Delay(1).Wait();
+                int triangleHeight = (int)Math.Round(button.Height * 6.0 / 23.0);
+
+                Bitmap triangleDown = new Bitmap(triangleHeight * 2 - 1, triangleHeight);
+
+                using (var g = Graphics.FromImage(triangleDown))
+                using (var brush = new SolidBrush(Color.Black))
+                {
+                    g.FillPolygon(
+                        brush,
+                        new[] {
+                            new Point(1, 1),
+                            new Point(triangleDown.Width - 1, 0),
+                            new Point(triangleDown.Width / 2, triangleDown.Height),
+                        }
+                    );
+                }
+
+                button.Image = triangleDown;
+            });
         }
     }
 }
