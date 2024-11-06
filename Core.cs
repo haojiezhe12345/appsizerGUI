@@ -385,5 +385,19 @@ namespace appsizerGUI
 
             return (profile.Windows.Count, success);
         }
+
+        public static void RenameDesktop(string profileName, string newName)
+        {
+            config.Reload();
+            config.DesktopProfiles.First(x => x.Name == profileName).Name = newName;
+            config.Save();
+        }
+
+        public static void DeleteDesktop(string profileName)
+        {
+            config.Reload();
+            config.DesktopProfiles.RemoveAll(x => x.Name == profileName);
+            config.Save();
+        }
     }
 }

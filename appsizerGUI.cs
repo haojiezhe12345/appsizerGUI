@@ -126,7 +126,7 @@ namespace appsizerGUI
             }
         }
 
-        public void ShowDesktopSaveSuccessMessage(string name, int count)
+        private void ShowDesktopSaveSuccessMessage(string name, int count)
         {
             statusLabel.Text = $"Saved {count} windows to \"{name}\"";
         }
@@ -178,24 +178,13 @@ namespace appsizerGUI
         {
             menuSaveDesktop.DropDownItems.Clear();
             menuRestoreDesktop.DropDownItems.Clear();
+            menuDesktopProfileManage.DropDownItems.Clear();
 
-            var menuSaveToNew = new ToolStripMenuItem("< New profile >");
-            menuSaveToNew.Click += (_s, _e) =>
-            {
-                var profileAddFrom = new DesktopProfileAddDialog();
-                profileAddFrom.ShowDialog(this);
-            };
-            menuSaveDesktop.DropDownItems.Add(menuSaveToNew);
+            var hasProfiles = config.DesktopProfiles.Count > 0;
 
-            if (config.DesktopProfiles.Count == 0)
-            {
-                var menuNoProfile = new ToolStripMenuItem()
-                {
-                    Text = "No saved profiles...",
-                    Enabled = false
-                };
-                menuRestoreDesktop.DropDownItems.Add(menuNoProfile);
-            }
+            menuSaveDesktop.DropDownItems.Add(menuSaveDesktopItemAdd);
+            menuRestoreDesktop.Enabled = hasProfiles;
+            menuDesktopProfileManage.Enabled = hasProfiles;
 
             foreach (var desktop in config.DesktopProfiles)
             {
@@ -216,7 +205,30 @@ namespace appsizerGUI
                     statusLabel.Text = $"Restored {successCount}/{windowCount} windows from \"{desktop.Name}\"";
                 };
                 menuRestoreDesktop.DropDownItems.Add(menuItemLoad);
+
+                var menuItemManage = new ToolStripMenuItem(desktop.Name);
+
+                var menuItemManageRename = new ToolStripMenuItem("Rename");
+                menuItemManageRename.Click += (_s, _e) => new DesktopProfileRenameDialog(desktop.Name).ShowDialog(this);
+
+                var menuItemManageDelete = new ToolStripMenuItem("Delete");
+                menuItemManageDelete.Click += (_s, _e) =>
+                {
+                    DeleteDesktop(desktop.Name);
+                    statusLabel.Text = $"Profile \"{desktop.Name}\" deleted";
+                };
+
+                menuItemManage.DropDownItems.AddRange(new[] {
+                    menuItemManageRename,
+                    menuItemManageDelete,
+                });
+                menuDesktopProfileManage.DropDownItems.Add(menuItemManage);
             }
+        }
+
+        private void OnAddDesktopProfileClick(object sender, EventArgs e)
+        {
+            new DesktopProfileAddDialog().ShowDialog(this);
         }
 
         private void OnToggleCalibrate(object sender, EventArgs e)
@@ -310,6 +322,34 @@ namespace appsizerGUI
                 try
                 {
                     ((appsizerGUI)Owner).ShowDesktopSaveSuccessMessage(Input.Text, windowCount);
+                }
+                catch { }
+
+                Close();
+            }
+        }
+
+        private class DesktopProfileRenameDialog : appsizerGUI_TextInputDialog
+        {
+            private readonly string profileName;
+
+            public DesktopProfileRenameDialog(string profileName)
+            {
+                Text = "Rename profile";
+                InputLabel.Text = "Profile name:";
+                Input.Text = profileName;
+                this.profileName = profileName;
+            }
+
+            public override void OnOkClicked(object sender, EventArgs e)
+            {
+                if (Input.Text.Length == 0) return;
+
+                RenameDesktop(profileName, Input.Text);
+
+                try
+                {
+                    ((appsizerGUI)Owner).statusLabel.Text = $"Profile \"{profileName}\" renamed to \"{Input.Text}\"";
                 }
                 catch { }
 
