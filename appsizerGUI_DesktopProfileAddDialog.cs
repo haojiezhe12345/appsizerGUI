@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using static appsizerGUI.Core;
 
@@ -18,10 +19,18 @@ namespace appsizerGUI
             while (config.DesktopProfiles.Any(x => x.Name == profileNameAdd.Text));
         }
 
-        private void OnAddProfileClicked(object sender, System.EventArgs e)
+        private void OnAddProfileClicked(object sender, EventArgs e)
         {
             if (profileNameAdd.Text.Length == 0) return;
-            SaveDesktop(profileNameAdd.Text);
+
+            var windowCount = SaveDesktop(profileNameAdd.Text);
+
+            try
+            {
+                ((appsizerGUI)Owner).ShowDesktopSaveSuccessMessage(profileNameAdd.Text, windowCount);
+            }
+            catch { }
+
             Close();
         }
     }

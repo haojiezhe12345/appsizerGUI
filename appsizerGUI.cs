@@ -126,6 +126,11 @@ namespace appsizerGUI
             }
         }
 
+        public void ShowDesktopSaveSuccessMessage(string name, int count)
+        {
+            statusLabel.Text = $"Saved {count} windows to \"{name}\"";
+        }
+
         private void SaveCurrentWindow(object sender, EventArgs e)
         {
             var existingWindow = config.SavedWindows.FirstOrDefault(x => x.Title == currentWindow.Title);
@@ -178,7 +183,7 @@ namespace appsizerGUI
             menuSaveToNew.Click += (_s, _e) =>
             {
                 var profileAddFrom = new appsizerGUI_DesktopProfileAddDialog();
-                profileAddFrom.ShowDialog();
+                profileAddFrom.ShowDialog(this);
             };
             menuSaveDesktop.DropDownItems.Add(menuSaveToNew);
 
@@ -197,14 +202,18 @@ namespace appsizerGUI
                 var menuItemSave = new ToolStripMenuItem(desktop.Name);
                 menuItemSave.Click += (_s, _e) =>
                 {
-                    SaveDesktop(desktop.Name);
+                    ShowDesktopSaveSuccessMessage(
+                        desktop.Name,
+                        SaveDesktop(desktop.Name)
+                    );
                 };
                 menuSaveDesktop.DropDownItems.Add(menuItemSave);
 
                 var menuItemLoad = new ToolStripMenuItem(desktop.Name);
                 menuItemLoad.Click += (_s, _e) =>
                 {
-                    RestoreDesktop(desktop.Name);
+                    var (windowCount, successCount) = RestoreDesktop(desktop.Name);
+                    statusLabel.Text = $"Restored {successCount}/{windowCount} windows from \"{desktop.Name}\"";
                 };
                 menuRestoreDesktop.DropDownItems.Add(menuItemLoad);
             }
@@ -292,7 +301,7 @@ namespace appsizerGUI
 
             Task.Run(() =>
             {
-                Task.Delay(1).Wait();
+                Task.Delay(10).Wait();
                 int triangleHeight = (int)Math.Round(button.Height * 6.0 / 23.0);
 
                 Bitmap triangleDown = new Bitmap(triangleHeight * 2 - 1, triangleHeight);

@@ -343,7 +343,7 @@ namespace appsizerGUI
             currentWindow.FindWindow();
         }
 
-        public static void SaveDesktop(string profileName)
+        public static int SaveDesktop(string profileName)
         {
             config.Reload();
 
@@ -368,17 +368,22 @@ namespace appsizerGUI
             }
 
             config.Save();
+            return windows.Count;
         }
 
-        public static void RestoreDesktop(string profileName)
+        public static (int windowCount, int successCount) RestoreDesktop(string profileName)
         {
             var profile = config.DesktopProfiles.First(x => x.Name == profileName);
+            int success = 0;
 
             foreach (var window in profile.Windows)
             {
-                window.FindWindow();
-                window.SetPosition();
+                if (window.FindWindow() &&
+                    window.SetPosition())
+                    success++;
             }
+
+            return (profile.Windows.Count, success);
         }
     }
 }
