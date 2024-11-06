@@ -182,7 +182,7 @@ namespace appsizerGUI
             var menuSaveToNew = new ToolStripMenuItem("< New profile >");
             menuSaveToNew.Click += (_s, _e) =>
             {
-                var profileAddFrom = new appsizerGUI_DesktopProfileAddDialog();
+                var profileAddFrom = new DesktopProfileAddDialog();
                 profileAddFrom.ShowDialog(this);
             };
             menuSaveDesktop.DropDownItems.Add(menuSaveToNew);
@@ -284,6 +284,45 @@ namespace appsizerGUI
         private void OnAlwaysOnTopClicked(object sender, EventArgs e)
         {
             currentWindow.SetAlwaysOnTop(windowToolsAlwaysOnTop.Checked);
+        }
+
+        private class DesktopProfileAddDialog : appsizerGUI_TextInputDialog
+        {
+            public DesktopProfileAddDialog()
+            {
+                Text = "New profile";
+                InputLabel.Text = "Profile name:";
+
+                int i = 0;
+                do
+                {
+                    Input.Text = $"Profile {++i:D2}";
+                }
+                while (config.DesktopProfiles.Any(x => x.Name == Input.Text));
+            }
+
+            public override void OnOkClicked(object sender, EventArgs e)
+            {
+                if (Input.Text.Length == 0) return;
+
+                var windowCount = SaveDesktop(Input.Text);
+
+                try
+                {
+                    ((appsizerGUI)Owner).ShowDesktopSaveSuccessMessage(Input.Text, windowCount);
+                }
+                catch { }
+
+                Close();
+            }
+        }
+
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
         }
     }
 
