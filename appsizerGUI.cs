@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static appsizerGUI.Core;
+using static appsizerGUI.DLLImports;
 
 namespace appsizerGUI
 {
@@ -240,6 +241,19 @@ namespace appsizerGUI
 
         private void OnWindowToolsClick(object sender, EventArgs e)
         {
+            windowToolsShowWindow.DropDownItems.Clear();
+
+            foreach (int param in Enum.GetValues(typeof(ShowWindowParam)))
+            {
+                var menuItem = new ToolStripMenuItem(((ShowWindowParam)param).ToString());
+                menuItem.Click += (_s, _e) =>
+                {
+                    ShowWindow(currentWindow.Handle, param);
+                    RefreshPosition();
+                };
+                windowToolsShowWindow.DropDownItems.Add(menuItem);
+            }
+
             while (windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd) - windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) > 1)
             {
                 windowToolsMenu.Items.RemoveAt(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) + 1);

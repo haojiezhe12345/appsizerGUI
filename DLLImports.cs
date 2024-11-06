@@ -63,6 +63,25 @@ namespace appsizerGUI
         public const int SWP_NOSIZE = 0x0001;
         public const int SWP_NOMOVE = 0x0002;
 
+        [DllImport("user32.dll")]
+        public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+        public static bool ShowWindow(IntPtr hWnd, ShowWindowParam nCmdShow) => ShowWindow(hWnd, (int)nCmdShow);
+        public enum ShowWindowParam
+        {
+            SW_HIDE,
+            SW_SHOWNORMAL,
+            SW_SHOWMINIMIZED,
+            SW_SHOWMAXIMIZED,
+            SW_SHOWNOACTIVATE,
+            SW_SHOW,
+            SW_MINIMIZE,
+            SW_SHOWMINNOACTIVE,
+            SW_SHOWNA,
+            SW_RESTORE,
+            SW_SHOWDEFAULT,
+            SW_FORCEMINIMIZE,
+        }
+
 
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(uint dwDesiredAccess, bool bInheritHandle, uint dwProcessId);

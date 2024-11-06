@@ -43,12 +43,15 @@ namespace appsizerGUI
             public int Y { get; set; }
             public int Width { get; set; }
             public int Height { get; set; }
+            public bool IsMaximized { get; set; }
             [XmlIgnore]
             public int Right => ScreenWidth - X - Width;
             [XmlIgnore]
             public int Bottom => ScreenHeight - Y - Height;
             [XmlIgnore]
             public Rect Border { get; set; }
+            [XmlIgnore]
+            public bool IsMinimized { get; set; }
 
             [XmlIgnore]
             public bool IsValid => IsWindow(Handle);
@@ -57,7 +60,12 @@ namespace appsizerGUI
             {
                 if (GetWindowRect(Handle, out Rect windowRect) && GetClientRect(Handle, out Rect clientRect))
                 {
-                    GetWindowBorder(windowRect, clientRect);
+                    var windowStyle = GetWindowStyle<WindowStyles>();
+
+                    IsMaximized = windowStyle.Is(WindowStyles.WS_MAXIMIZE);
+                    IsMinimized = windowStyle.Is(WindowStyles.WS_MINIMIZE);
+
+                    GetWindowBorder(windowRect, clientRect, windowStyle);
 
                     X = windowRect.Left + Border.Left;
                     Y = windowRect.Top + Border.Top;
@@ -86,10 +94,8 @@ namespace appsizerGUI
                     && MoveWindow(Handle, X - Border.Left, Y - Border.Top, Width + Border.Left + Border.Right, Height + Border.Top + Border.Bottom, true);
             }
 
-            public void GetWindowBorder(Rect windowRect, Rect clientRect)
+            public void GetWindowBorder(Rect windowRect, Rect clientRect, WindowStyle<WindowStyles> windowStyle)
             {
-                var windowStyle = GetWindowStyle<WindowStyles>();
-
                 if (windowStyle.Is(WindowStyles.WS_MINIMIZE) || !enableWindowBorderCalibration)
                 {
                     Border = new Rect { Top = 0, Left = 0, Right = 0, Bottom = 0 };
@@ -116,7 +122,7 @@ namespace appsizerGUI
             {
                 if (GetWindowRect(Handle, out Rect windowRect) && GetClientRect(Handle, out Rect clientRect))
                 {
-                    GetWindowBorder(windowRect, clientRect);
+                    GetWindowBorder(windowRect, clientRect, GetWindowStyle<WindowStyles>());
                     return true;
                 }
                 return false;
@@ -348,23 +354,23 @@ namespace appsizerGUI
             config.Reload();
 
             var windows = GetWindowList();
+
             windows.ForEach(w => w.GetPosition());
+            windows = windows.Where(x => !x.IsMinimized).ToList();
 
-            var profile = new DesktopProfile
+            var extstingProfile = config.DesktopProfiles.FirstOrDefault(x => x.Name == profileName);
+
+            if (extstingProfile != null)
             {
-                Name = profileName,
-                Windows = windows
-            };
-
-            var extstingProfileIndex = config.DesktopProfiles.FindIndex(x => x.Name == profileName);
-
-            if (extstingProfileIndex >= 0)
-            {
-                config.DesktopProfiles[extstingProfileIndex] = profile;
+                extstingProfile.Windows = windows;
             }
             else
             {
-                config.DesktopProfiles.Add(profile);
+                config.DesktopProfiles.Add(new DesktopProfile
+                {
+                    Name = profileName,
+                    Windows = windows
+                });
             }
 
             config.Save();
@@ -379,7 +385,11 @@ namespace appsizerGUI
             foreach (var window in profile.Windows)
             {
                 if (window.FindWindow() &&
-                    window.SetPosition())
+                    window.IsMaximized
+                        ? ShowWindow(window.Handle, ShowWindowParam.SW_SHOWMAXIMIZED)
+                        : ShowWindow(window.Handle, ShowWindowParam.SW_SHOWNOACTIVATE) &&
+                          window.SetPosition()
+                    )
                     success++;
             }
 

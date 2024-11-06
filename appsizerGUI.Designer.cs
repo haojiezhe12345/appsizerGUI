@@ -68,6 +68,7 @@ namespace appsizerGUI
             this.windowToolsBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDesktopProfileManage = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolsShowWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
@@ -399,11 +400,12 @@ namespace appsizerGUI
             this.toolStripMenuItem3,
             this.toolStripMenuItem4,
             this.windowToolsAlwaysOnTop,
+            this.windowToolsShowWindow,
             this.windowToolsStyleSeparatorStart,
             this.windowToolsStyleSeparatorEnd,
             this.windowToolsBorder});
             this.windowToolsMenu.Name = "windowToolsMenu";
-            this.windowToolsMenu.Size = new System.Drawing.Size(183, 104);
+            this.windowToolsMenu.Size = new System.Drawing.Size(183, 148);
             // 
             // toolStripMenuItem3
             // 
@@ -455,6 +457,12 @@ namespace appsizerGUI
             this.menuDesktopProfileManage.Name = "menuDesktopProfileManage";
             this.menuDesktopProfileManage.Size = new System.Drawing.Size(238, 22);
             this.menuDesktopProfileManage.Text = "Manage profiles";
+            // 
+            // windowToolsShowWindow
+            // 
+            this.windowToolsShowWindow.Name = "windowToolsShowWindow";
+            this.windowToolsShowWindow.Size = new System.Drawing.Size(182, 22);
+            this.windowToolsShowWindow.Text = "ShowWindow";
             // 
             // appsizerGUI
             // 
@@ -544,6 +552,7 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem menuSaveDesktopItemAdd;
         private System.Windows.Forms.ToolStripMenuItem menuDesktopProfileManage;
+        private System.Windows.Forms.ToolStripMenuItem windowToolsShowWindow;
     }
 }
 
