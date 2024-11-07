@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
@@ -293,8 +295,53 @@ namespace appsizerGUI
                 }
                 catch
                 {
-                    return new Config();
+                    try
+                    {
+                        return new Config
+                        {
+                            SavedWindows = GetSavedWindowsV1()
+                        };
+                    }
+                    catch
+                    {
+                        return new Config();
+                    }
                 }
+            }
+
+            private static List<string> GetSettingV1(string key)
+            {
+                ConfigurationManager.RefreshSection("appSettings");
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                var value = ConfigurationManager.AppSettings[key];
+                if (value == null)
+                    value = "[]";
+                string[] array = js.Deserialize<string[]>(value);
+                return array.OfType<string>().ToList();
+            }
+
+            private static List<Window> GetSavedWindowsV1()
+            {
+                List<Window> result = new List<Window>();
+
+                foreach (var windowName in GetSettingV1("savedWindows"))
+                {
+                    try
+                    {
+                        var windowV1 = GetSettingV1(windowName);
+                        result.Add(new Window
+                        {
+                            Title = windowName,
+                            X = Int32.Parse(windowV1[0]),
+                            Y = Int32.Parse(windowV1[1]),
+                            Width = Int32.Parse(windowV1[2]),
+                            Height = Int32.Parse(windowV1[3]),
+                        });
+                    }
+                    catch { }
+                }
+
+                return result;
             }
         }
 
