@@ -402,7 +402,7 @@ namespace appsizerGUI
 
             var windows = GetWindowList();
 
-            windows.ForEach(w => w.GetPosition());
+            windows.ForEach(x => x.GetPosition());
             windows = windows.Where(x => !x.IsMinimized).ToList();
 
             var extstingProfile = config.DesktopProfiles.FirstOrDefault(x => x.Name == profileName);
@@ -429,15 +429,49 @@ namespace appsizerGUI
             var profile = config.DesktopProfiles.First(x => x.Name == profileName);
             int success = 0;
 
-            foreach (var window in profile.Windows)
+            var profileWindows = new List<Window>(profile.Windows);
+            var desktopWindows = GetWindowList();
+
+            Window currentProfileWindow = null;
+
+            foreach (var match in new Func<Window, bool>[]
             {
-                if (window.FindWindow() &&
-                    window.IsMaximized
-                        ? ShowWindow(window.Handle, ShowWindowParam.SW_SHOWMAXIMIZED)
-                        : ShowWindow(window.Handle, ShowWindowParam.SW_SHOWNOACTIVATE) &&
-                          window.SetPosition()
-                    )
-                    success++;
+                x => x.ProcessName == currentProfileWindow.ProcessName &&
+                     x.Handle == currentProfileWindow.Handle,
+
+                x => x.ProcessName == currentProfileWindow.ProcessName &&
+                     x.Class == currentProfileWindow.Class &&
+                     x.Title == currentProfileWindow.Title,
+
+                x => x.ProcessName == currentProfileWindow.ProcessName &&
+                     x.Class == currentProfileWindow.Class,
+            })
+            {
+                var restoredWindows = new List<Window>();
+
+                foreach (var w in profileWindows)
+                {
+                    currentProfileWindow = w;
+
+                    var currentDesktopWindow = desktopWindows.FirstOrDefault(match);
+
+                    if (currentDesktopWindow != null &&
+                        (currentProfileWindow.Handle = currentDesktopWindow.Handle) != IntPtr.Zero &&
+                        currentProfileWindow.IsMaximized
+                            ? ShowWindow(currentProfileWindow.Handle, ShowWindowParam.SW_SHOWMAXIMIZED)
+                            : ShowWindow(currentProfileWindow.Handle, ShowWindowParam.SW_SHOWNOACTIVATE) &&
+                              currentProfileWindow.SetPosition()
+                        )
+                    {
+                        desktopWindows.Remove(currentDesktopWindow);
+                        restoredWindows.Add(currentProfileWindow);
+                        success++;
+                    }
+
+                    currentProfileWindow = null;
+                }
+
+                profileWindows.RemoveAll(x => restoredWindows.Contains(x));
             }
 
             return (profile.Windows.Count, success);
