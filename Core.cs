@@ -403,7 +403,12 @@ namespace appsizerGUI
             var windows = GetWindowList();
 
             windows.ForEach(x => x.GetPosition());
-            windows = windows.Where(x => !x.IsMinimized).ToList();
+
+            windows = windows.Where(x => !(
+                x.IsMinimized ||
+                x.Class == "Progman" ||
+                x.ProcessName == "TextInputHost.exe"
+            )).ToList();
 
             var extstingProfile = config.DesktopProfiles.FirstOrDefault(x => x.Name == profileName);
 
@@ -426,6 +431,8 @@ namespace appsizerGUI
 
         public static (int windowCount, int successCount) RestoreDesktop(string profileName)
         {
+            config.Reload();
+
             var profile = config.DesktopProfiles.First(x => x.Name == profileName);
             int success = 0;
 
@@ -444,7 +451,11 @@ namespace appsizerGUI
                      x.Title == currentProfileWindow.Title,
 
                 x => x.ProcessName == currentProfileWindow.ProcessName &&
-                     x.Class == currentProfileWindow.Class,
+                     x.Class == currentProfileWindow.Class &&
+                     x.ProcessName != "ApplicationFrameHost.exe",
+
+                x => x.ProcessName == currentProfileWindow.ProcessName &&
+                     x.Title == currentProfileWindow.Title,
             })
             {
                 var restoredWindows = new List<Window>();
