@@ -57,6 +57,8 @@ namespace appsizerGUI
 
             [XmlIgnore]
             public bool IsValid => IsWindow(Handle);
+            [XmlIgnore]
+            public bool IsVisible => IsWindowVisible(Handle);
 
             public bool GetPosition()
             {
@@ -396,7 +398,7 @@ namespace appsizerGUI
             currentWindow.FindWindow();
         }
 
-        public static int SaveDesktop(string profileName)
+        public static (int newTotal, int updated) SaveDesktop(string profileName)
         {
             config.Reload();
 
@@ -412,9 +414,14 @@ namespace appsizerGUI
 
             var extstingProfile = config.DesktopProfiles.FirstOrDefault(x => x.Name == profileName);
 
+            int newTotal = 0;
+
             if (extstingProfile != null)
             {
-                extstingProfile.Windows = windows;
+                extstingProfile.Windows.RemoveAll(x => windows.Any(y => x.ProcessName == y.ProcessName));
+                extstingProfile.Windows.AddRange(windows);
+
+                newTotal = extstingProfile.Windows.Count;
             }
             else
             {
@@ -423,10 +430,12 @@ namespace appsizerGUI
                     Name = profileName,
                     Windows = windows
                 });
+                newTotal = windows.Count;
             }
 
             config.Save();
-            return windows.Count;
+
+            return (newTotal, windows.Count);
         }
 
         public static (int windowCount, int successCount) RestoreDesktop(string profileName)
@@ -468,10 +477,10 @@ namespace appsizerGUI
 
                     if (currentDesktopWindow != null &&
                         (currentProfileWindow.Handle = currentDesktopWindow.Handle) != IntPtr.Zero &&
-                        currentProfileWindow.IsMaximized
+                        (currentProfileWindow.IsMaximized
                             ? ShowWindow(currentProfileWindow.Handle, ShowWindowParam.SW_SHOWMAXIMIZED)
                             : ShowWindow(currentProfileWindow.Handle, ShowWindowParam.SW_SHOWNOACTIVATE) &&
-                              currentProfileWindow.SetPosition()
+                              currentProfileWindow.SetPosition())
                         )
                     {
                         desktopWindows.Remove(currentDesktopWindow);

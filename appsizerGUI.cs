@@ -127,9 +127,16 @@ namespace appsizerGUI
             }
         }
 
-        private void ShowDesktopSaveSuccessMessage(string name, int count)
+        private void ShowDesktopSaveSuccessMessage(string name, (int newTotal, int updated) updateResult)
         {
-            statusLabel.Text = $"Saved {count} windows to \"{name}\"";
+            if (updateResult.newTotal == updateResult.updated)
+            {
+                statusLabel.Text = $"Saved {updateResult.newTotal} windows to \"{name}\"";
+            }
+            else
+            {
+                statusLabel.Text = $"Updated {updateResult.updated} windows in \"{name}\", new total: {updateResult.newTotal}";
+            }
         }
 
         private void SaveCurrentWindow(object sender, EventArgs e)
