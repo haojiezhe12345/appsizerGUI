@@ -1,5 +1,22 @@
 # appsizerGUI
-A tool to help you resize a window precisely
+Easily manipulate your desktop windows
 
-# Screenshots
-![image](https://user-images.githubusercontent.com/34207693/161383459-4b4e4046-f8ed-4bd2-b529-642428218385.png)
+![image](https://github.com/user-attachments/assets/49a0ff30-cfdc-424e-8900-9ce420574e84)
+
+## Features
+- **Resize and move window (in pixels)**
+- Quickly put window to screen center
+- Make window fullscreen borderless  
+  (usually used for games that do not support scaling or borderless fullscreen)
+- Change window styles, including:
+  - Window border
+  - Resizeable
+  - Minimize and Maximize button
+  - Always on top
+  - Visibility
+- **Save & batch restore all open window's size and position**  
+  (can be saved to different profiles)
+
+![image](https://github.com/user-attachments/assets/b01f4269-bfff-4e81-9335-288dc467be21)
+![image](https://github.com/user-attachments/assets/6376c767-628f-43c2-9780-e047b845f6a9)
+![image](https://github.com/user-attachments/assets/dccbc576-fd5a-4a6c-8a7d-6dc69a2500ed)
