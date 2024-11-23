@@ -34,7 +34,7 @@ namespace appsizerGUI
             this.dummyWindowToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSaveDesktop = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuSaveDesktopItemAdd = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuSaveDesktopNewProfile = new System.Windows.Forms.ToolStripMenuItem();
             this.menuRestoreDesktop = new System.Windows.Forms.ToolStripMenuItem();
             this.menuDesktopProfileManage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOptions = new System.Windows.Forms.ToolStripMenuItem();
@@ -120,17 +120,17 @@ namespace appsizerGUI
             // menuSaveDesktop
             // 
             this.menuSaveDesktop.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuSaveDesktopItemAdd});
+            this.menuSaveDesktopNewProfile});
             this.menuSaveDesktop.Name = "menuSaveDesktop";
             this.menuSaveDesktop.Size = new System.Drawing.Size(238, 22);
             this.menuSaveDesktop.Text = "Save all open window as";
             // 
-            // menuSaveDesktopItemAdd
+            // menuSaveDesktopNewProfile
             // 
-            this.menuSaveDesktopItemAdd.Name = "menuSaveDesktopItemAdd";
-            this.menuSaveDesktopItemAdd.Size = new System.Drawing.Size(180, 22);
-            this.menuSaveDesktopItemAdd.Text = "< New profile >";
-            this.menuSaveDesktopItemAdd.Click += new System.EventHandler(this.OnAddDesktopProfileClick);
+            this.menuSaveDesktopNewProfile.Name = "menuSaveDesktopNewProfile";
+            this.menuSaveDesktopNewProfile.Size = new System.Drawing.Size(180, 22);
+            this.menuSaveDesktopNewProfile.Text = "< New profile >";
+            this.menuSaveDesktopNewProfile.Click += new System.EventHandler(this.OnAddDesktopProfileClick);
             // 
             // menuRestoreDesktop
             // 
@@ -547,7 +547,7 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem windowToolsAlwaysOnTop;
         private System.Windows.Forms.ToolStripMenuItem dummyWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
-        private System.Windows.Forms.ToolStripMenuItem menuSaveDesktopItemAdd;
+        private System.Windows.Forms.ToolStripMenuItem menuSaveDesktopNewProfile;
         private System.Windows.Forms.ToolStripMenuItem menuDesktopProfileManage;
         private System.Windows.Forms.ToolStripMenuItem windowToolsShowWindow;
         private System.Windows.Forms.ToolStripMenuItem menuWindowBorderSelect;

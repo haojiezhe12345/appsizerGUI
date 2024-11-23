@@ -15,8 +15,7 @@ namespace appsizerGUI
         {
             InitializeComponent();
 
-            Control[] controls = { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, btnRefresh, btnWindowTools, btnApply };
-            windowOperationControls = controls;
+            windowOperationControls = new Control[] { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, btnRefresh, btnWindowTools, btnApply };
             UpdateWindowControlsEnabledStatus();
 
             foreach (int m in Enum.GetValues(typeof(BorderCalibrationMethod)))
@@ -57,7 +56,7 @@ namespace appsizerGUI
             btnWindowTools.AddDownTriangle();
         }
 
-        private Control[] windowOperationControls;
+        private readonly Control[] windowOperationControls;
         private bool uiUpdateHandlerEnabled = false;
 
         private void ListWindows(object sender, EventArgs e)
@@ -79,7 +78,7 @@ namespace appsizerGUI
                     Text = $"{window.Title}  [{window.ProcessName} ({window.Pid}) - 0x{window.Handle.ToInt64():X}]",
                     Image = image,
                 };
-                menuItem.Click += (_s, _e) =>
+                menuItem.Click += delegate
                 {
                     currentWindow = window;
                     RefreshPosition();
@@ -223,14 +222,14 @@ namespace appsizerGUI
 
             var hasProfiles = config.DesktopProfiles.Count > 0;
 
-            menuSaveDesktop.DropDownItems.Add(menuSaveDesktopItemAdd);
+            menuSaveDesktop.DropDownItems.Add(menuSaveDesktopNewProfile);
             menuRestoreDesktop.Enabled = hasProfiles;
             menuDesktopProfileManage.Enabled = hasProfiles;
 
             foreach (var desktop in config.DesktopProfiles)
             {
                 var menuItemSave = new ToolStripMenuItem(desktop.Name);
-                menuItemSave.Click += (_s, _e) =>
+                menuItemSave.Click += delegate
                 {
                     ShowDesktopSaveSuccessMessage(
                         desktop.Name,
@@ -240,7 +239,7 @@ namespace appsizerGUI
                 menuSaveDesktop.DropDownItems.Add(menuItemSave);
 
                 var menuItemLoad = new ToolStripMenuItem(desktop.Name);
-                menuItemLoad.Click += (_s, _e) =>
+                menuItemLoad.Click += delegate
                 {
                     var (windowCount, successCount) = RestoreDesktop(desktop.Name);
                     statusLabel.Text = $"Restored {successCount}/{windowCount} windows from \"{desktop.Name}\"";
@@ -250,10 +249,10 @@ namespace appsizerGUI
                 var menuItemManage = new ToolStripMenuItem(desktop.Name);
 
                 var menuItemManageRename = new ToolStripMenuItem("Rename");
-                menuItemManageRename.Click += (_s, _e) => new DesktopProfileRenameDialog(desktop.Name).ShowDialog(this);
+                menuItemManageRename.Click += delegate { new DesktopProfileRenameDialog(desktop.Name).ShowDialog(this); };
 
                 var menuItemManageDelete = new ToolStripMenuItem("Delete");
-                menuItemManageDelete.Click += (_s, _e) =>
+                menuItemManageDelete.Click += delegate
                 {
                     DeleteDesktop(desktop.Name);
                     statusLabel.Text = $"Profile \"{desktop.Name}\" deleted";
@@ -279,7 +278,7 @@ namespace appsizerGUI
             foreach (int param in Enum.GetValues(typeof(ShowWindowParam)))
             {
                 var menuItem = new ToolStripMenuItem(((ShowWindowParam)param).ToString());
-                menuItem.Click += (_s, _e) =>
+                menuItem.Click += delegate
                 {
                     ShowWindow(currentWindow.Handle, param);
                     RefreshPosition();
@@ -317,7 +316,7 @@ namespace appsizerGUI
                     Checked = windowStyle.Is(styleEnum),
                     CheckOnClick = true,
                 };
-                menuItem.CheckedChanged += async (sender, e) =>
+                menuItem.CheckedChanged += async delegate
                 {
                     windowStyle.Set(styleEnum, menuItem.Checked);
                     await currentWindow.SetWindowStyleAsync(windowStyle);
