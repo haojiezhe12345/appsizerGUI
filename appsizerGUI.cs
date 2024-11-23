@@ -19,7 +19,40 @@ namespace appsizerGUI
             windowOperationControls = controls;
             UpdateWindowControlsEnabledStatus();
 
-            useCalibration.Checked = enableWindowBorderCalibration;
+            foreach (int m in Enum.GetValues(typeof(BorderCalibrationMethod)))
+            {
+                var method = (BorderCalibrationMethod)m;
+                var text = method.ToString();
+
+                switch (method)
+                {
+                    case BorderCalibrationMethod.Native:
+                        text += " (usually 8px, Windows 8.1 or earlier)";
+                        break;
+                    case BorderCalibrationMethod.Calibrated:
+                        text += " (1px, Windows 10/11)";
+                        break;
+                    case BorderCalibrationMethod.ClientArea:
+                        text = "Client area (exclude the border completely)";
+                        break;
+                }
+
+                var menuItem = new ToolStripMenuItem(text);
+                menuItem.Click += delegate
+                {
+                    foreach (ToolStripMenuItem x in menuWindowBorderSelect.DropDownItems)
+                    {
+                        x.Checked = false;
+                    }
+                    menuItem.Checked = true;
+
+                    borderCalibrationMethod = method;
+                    if (uiUpdateHandlerEnabled) RefreshPosition();
+                };
+
+                menuWindowBorderSelect.DropDownItems.Add(menuItem);
+            }
+            ((ToolStripMenuItem)menuWindowBorderSelect.DropDownItems[(int)borderCalibrationMethod]).Checked = true;
 
             btnWindowTools.AddDownTriangle();
         }
@@ -237,13 +270,6 @@ namespace appsizerGUI
         private void OnAddDesktopProfileClick(object sender, EventArgs e)
         {
             new DesktopProfileAddDialog().ShowDialog(this);
-        }
-
-        private void OnToggleCalibrate(object sender, EventArgs e)
-        {
-            enableWindowBorderCalibration = useCalibration.Checked;
-            if (!uiUpdateHandlerEnabled) return;
-            RefreshPosition();
         }
 
         private void OnWindowToolsClick(object sender, EventArgs e)

@@ -23,7 +23,14 @@ namespace appsizerGUI
         public static Config config = Config.Load();
         public static Window currentWindow;
 
-        public static bool enableWindowBorderCalibration = true;
+        public static BorderCalibrationMethod borderCalibrationMethod = BorderCalibrationMethod.Calibrated;
+
+        public enum BorderCalibrationMethod
+        {
+            Native,
+            Calibrated,
+            ClientArea
+        }
 
         public class Window
         {
@@ -100,19 +107,27 @@ namespace appsizerGUI
 
             public void GetWindowBorder(Rect windowRect, Rect clientRect, WindowStyle<WindowStyles> windowStyle)
             {
-                if (windowStyle.Is(WindowStyles.WS_MINIMIZE) || !enableWindowBorderCalibration)
+                if (windowStyle.Is(WindowStyles.WS_MINIMIZE) || borderCalibrationMethod == BorderCalibrationMethod.Native)
                 {
                     Border = new Rect { Top = 0, Left = 0, Right = 0, Bottom = 0 };
                 }
                 else
                 {
                     var windowWidth = windowRect.Right - windowRect.Left;
+                    var windowHeight = windowRect.Bottom - windowRect.Top;
+
                     var clientWidth = clientRect.Right - clientRect.Left;
+                    var clientHeight = clientRect.Bottom - clientRect.Top;
+
                     var borderWidth = (windowWidth - clientWidth) / 2;
 
                     if (windowStyle.Is(WindowStyles.WS_MAXIMIZE))
                     {
                         Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
+                    }
+                    if (borderCalibrationMethod == BorderCalibrationMethod.ClientArea)
+                    {
+                        Border = new Rect { Top = windowHeight - clientHeight - borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
                     }
                     else
                     {
