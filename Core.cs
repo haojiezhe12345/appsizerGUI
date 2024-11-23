@@ -125,7 +125,7 @@ namespace appsizerGUI
                     {
                         Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
                     }
-                    if (borderCalibrationMethod == BorderCalibrationMethod.ClientArea)
+                    else if (borderCalibrationMethod == BorderCalibrationMethod.ClientArea)
                     {
                         Border = new Rect { Top = windowHeight - clientHeight - borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
                     }
