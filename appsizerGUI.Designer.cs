@@ -39,6 +39,7 @@ namespace appsizerGUI
             this.menuDesktopProfileManage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOptions = new System.Windows.Forms.ToolStripMenuItem();
             this.useAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuWindowBorderSelect = new System.Windows.Forms.ToolStripMenuItem();
             this.savedWindowSelector = new System.Windows.Forms.ComboBox();
             this.windowBottom = new System.Windows.Forms.Label();
             this.windowRight = new System.Windows.Forms.Label();
@@ -68,7 +69,7 @@ namespace appsizerGUI
             this.windowToolsStyleSeparatorEnd = new System.Windows.Forms.ToolStripSeparator();
             this.windowToolsBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuWindowBorderSelect = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
@@ -103,7 +104,7 @@ namespace appsizerGUI
             // dummyWindowToolStripMenuItem
             // 
             this.dummyWindowToolStripMenuItem.Name = "dummyWindowToolStripMenuItem";
-            this.dummyWindowToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.dummyWindowToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.dummyWindowToolStripMenuItem.Text = "Dummy window";
             // 
             // toolStripMenuItem1
@@ -111,7 +112,8 @@ namespace appsizerGUI
             this.toolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuSaveDesktop,
             this.menuRestoreDesktop,
-            this.menuDesktopProfileManage});
+            this.menuDesktopProfileManage,
+            this.toolStripMenuItem5});
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(62, 20);
             this.toolStripMenuItem1.Text = "&Desktop";
@@ -128,7 +130,7 @@ namespace appsizerGUI
             // menuSaveDesktopNewProfile
             // 
             this.menuSaveDesktopNewProfile.Name = "menuSaveDesktopNewProfile";
-            this.menuSaveDesktopNewProfile.Size = new System.Drawing.Size(180, 22);
+            this.menuSaveDesktopNewProfile.Size = new System.Drawing.Size(157, 22);
             this.menuSaveDesktopNewProfile.Text = "< New profile >";
             this.menuSaveDesktopNewProfile.Click += new System.EventHandler(this.OnAddDesktopProfileClick);
             // 
@@ -161,6 +163,12 @@ namespace appsizerGUI
             this.useAboveTaskbar.Name = "useAboveTaskbar";
             this.useAboveTaskbar.Size = new System.Drawing.Size(262, 22);
             this.useAboveTaskbar.Text = "Put centered window above taskbar";
+            // 
+            // menuWindowBorderSelect
+            // 
+            this.menuWindowBorderSelect.Name = "menuWindowBorderSelect";
+            this.menuWindowBorderSelect.Size = new System.Drawing.Size(262, 22);
+            this.menuWindowBorderSelect.Text = "Window border calculation method";
             // 
             // savedWindowSelector
             // 
@@ -456,11 +464,12 @@ namespace appsizerGUI
             this.toolStripMenuItem2.Size = new System.Drawing.Size(32, 19);
             this.toolStripMenuItem2.Text = "toolStripMenuItem2";
             // 
-            // menuWindowBorderSelect
+            // toolStripMenuItem5
             // 
-            this.menuWindowBorderSelect.Name = "menuWindowBorderSelect";
-            this.menuWindowBorderSelect.Size = new System.Drawing.Size(262, 22);
-            this.menuWindowBorderSelect.Text = "Window border calculation method";
+            this.toolStripMenuItem5.Name = "toolStripMenuItem5";
+            this.toolStripMenuItem5.Size = new System.Drawing.Size(238, 22);
+            this.toolStripMenuItem5.Text = "Restore all minimized windows";
+            this.toolStripMenuItem5.Click += new System.EventHandler(this.OnShowAllMinimizedWindowsClick);
             // 
             // appsizerGUI
             // 
@@ -551,6 +560,7 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem menuDesktopProfileManage;
         private System.Windows.Forms.ToolStripMenuItem windowToolsShowWindow;
         private System.Windows.Forms.ToolStripMenuItem menuWindowBorderSelect;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
     }
 }
 

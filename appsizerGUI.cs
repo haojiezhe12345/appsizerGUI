@@ -271,6 +271,11 @@ namespace appsizerGUI
             new DesktopProfileAddDialog().ShowDialog(this);
         }
 
+        private void OnShowAllMinimizedWindowsClick(object sender, EventArgs e)
+        {
+            statusLabel.Text = $"Restored {ShowAllMinimizedWindows()} minimized windows";
+        }
+
         private void OnWindowToolsClick(object sender, EventArgs e)
         {
             windowToolsShowWindow.DropDownItems.Clear();

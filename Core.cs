@@ -413,6 +413,22 @@ namespace appsizerGUI
             currentWindow.FindWindow();
         }
 
+        public static Func<Window, Func<Window, bool>>[] windowMatchers = {
+            w => x => x.ProcessName == w.ProcessName &&
+                      x.Handle == w.Handle,
+
+            w => x => x.ProcessName == w.ProcessName &&
+                      x.Class == w.Class &&
+                      x.Title == w.Title,
+
+            w => x => x.ProcessName == w.ProcessName &&
+                      x.Class == w.Class &&
+                      x.ProcessName != "ApplicationFrameHost.exe",
+
+            w => x => x.ProcessName == w.ProcessName &&
+                      x.Title == w.Title,
+        };
+
         public static (int newTotal, int updated) SaveDesktop(string profileName)
         {
             config.Reload();
@@ -463,47 +479,35 @@ namespace appsizerGUI
             var profileWindows = new List<Window>(profile.Windows);
             var desktopWindows = GetWindowList();
 
-            Window currentProfileWindow = null;
-
-            foreach (var match in new Func<Window, bool>[]
-            {
-                x => x.ProcessName == currentProfileWindow.ProcessName &&
-                     x.Handle == currentProfileWindow.Handle,
-
-                x => x.ProcessName == currentProfileWindow.ProcessName &&
-                     x.Class == currentProfileWindow.Class &&
-                     x.Title == currentProfileWindow.Title,
-
-                x => x.ProcessName == currentProfileWindow.ProcessName &&
-                     x.Class == currentProfileWindow.Class &&
-                     x.ProcessName != "ApplicationFrameHost.exe",
-
-                x => x.ProcessName == currentProfileWindow.ProcessName &&
-                     x.Title == currentProfileWindow.Title,
-            })
+            foreach (var match in windowMatchers)
             {
                 var restoredWindows = new List<Window>();
 
-                foreach (var w in profileWindows)
+                foreach (var profileWindow in profileWindows)
                 {
-                    currentProfileWindow = w;
+                    var desktopWindow = desktopWindows.FirstOrDefault(match(profileWindow));
 
-                    var currentDesktopWindow = desktopWindows.FirstOrDefault(match);
+                    if (desktopWindow == null || desktopWindow.Handle == IntPtr.Zero) continue;
 
-                    if (currentDesktopWindow != null &&
-                        (currentProfileWindow.Handle = currentDesktopWindow.Handle) != IntPtr.Zero &&
-                        (currentProfileWindow.IsMaximized
-                            ? ShowWindow(currentProfileWindow.Handle, ShowWindowParam.SW_SHOWMAXIMIZED)
-                            : ShowWindow(currentProfileWindow.Handle, ShowWindowParam.SW_SHOWNOACTIVATE) &&
-                              currentProfileWindow.SetPosition())
-                        )
+                    desktopWindow.GetPosition();
+                    if (desktopWindow.IsMinimized)
                     {
-                        desktopWindows.Remove(currentDesktopWindow);
-                        restoredWindows.Add(currentProfileWindow);
-                        success++;
+                        if (!ShowWindow(desktopWindow.Handle, ShowWindowParam.SW_SHOWNOACTIVATE)) continue;
                     }
 
-                    currentProfileWindow = null;
+                    profileWindow.Handle = desktopWindow.Handle;
+                    if (profileWindow.IsMaximized)
+                    {
+                        if (!ShowWindow(profileWindow.Handle, ShowWindowParam.SW_SHOWMAXIMIZED)) continue;
+                    }
+                    else
+                    {
+                        if (!profileWindow.SetPosition()) continue;
+                    }
+
+                    desktopWindows.Remove(desktopWindow);
+                    restoredWindows.Add(profileWindow);
+                    success++;
                 }
 
                 profileWindows.RemoveAll(x => restoredWindows.Contains(x));
@@ -524,6 +528,22 @@ namespace appsizerGUI
             config.Reload();
             config.DesktopProfiles.RemoveAll(x => x.Name == profileName);
             config.Save();
+        }
+
+        public static int ShowAllMinimizedWindows()
+        {
+            int success = 0;
+
+            foreach (var win in GetWindowList())
+            {
+                win.GetPosition();
+                if (win.IsMinimized)
+                {
+                    if (ShowWindow(win.Handle, ShowWindowParam.SW_SHOWNOACTIVATE)) success++;
+                }
+            }
+
+            return success;
         }
     }
 }
