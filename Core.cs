@@ -181,12 +181,8 @@ namespace appsizerGUI
 
             public async Task MakeBorderless()
             {
-                var windowStyle = GetWindowStyle<WindowStyles>();
-
-                windowStyle.Set(WindowStyles.WS_SIZEBOX, false);
-                windowStyle.Set(WindowStyles.WS_CAPTION, false);
-
-                await SetWindowStyleAsync(windowStyle);
+                await SetWindowStyleAsync(new WindowStyle<WindowStyles>((int)WindowStyles.WS_VISIBLE));
+                await SetWindowStyleAsync(new WindowStyle<WindowExStyles>((int)WindowExStyles.WS_EX_APPWINDOW));
 
                 SetPosition(0, 0, ScreenWidth, ScreenHeight);
             }
@@ -238,7 +234,7 @@ namespace appsizerGUI
         {
             public int Style { get; set; }
 
-            public WindowStyle() { }
+            public WindowStyle() => Style = 0;
             public WindowStyle(int style) => Style = style;
 
             public bool Is(T style)
@@ -250,7 +246,7 @@ namespace appsizerGUI
             public void Set(T style, bool value)
             {
                 var s = Convert.ToInt32(style);
-                Style = value ? Style | s : (Style & ~s);
+                Style = value ? (Style | s) : (Style & ~s);
             }
         }
 
@@ -274,6 +270,7 @@ namespace appsizerGUI
             WS_EX_WINDOWEDGE = 0x00000100,
             WS_EX_CLIENTEDGE = 0x00000200,
             WS_EX_APPWINDOW = 0x00040000,
+            WS_EX_NOACTIVATE = 0x08000000,
         }
 
         public class DesktopProfile

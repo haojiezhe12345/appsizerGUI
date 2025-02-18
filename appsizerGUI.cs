@@ -98,7 +98,7 @@ namespace appsizerGUI
         private void OnSetPosition(object sender, EventArgs e)
         {
             if (!uiUpdateHandlerEnabled) return;
-            currentWindow.SetPosition((int)windowX.Value, (int)windowY.Value, (int)windowWidth.Value, (int)windowHeight.Value);
+            currentWindow.SetPosition((int)windowX.Value, (int)windowY.Value, (int)windowWidth.Value, (int)windowHeight.Value, optionBringToFront.Checked);
             UpdateView();
         }
 
