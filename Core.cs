@@ -9,6 +9,7 @@ using System.Web.Script.Serialization;
 using System.Windows.Forms;
 using System.Xml;
 using System.Xml.Serialization;
+using static appsizerGUI.Core;
 using static appsizerGUI.DLLImports;
 
 namespace appsizerGUI
@@ -66,6 +67,21 @@ namespace appsizerGUI
             public bool IsValid => IsWindow(Handle);
             [XmlIgnore]
             public bool IsVisible => IsWindowVisible(Handle);
+            [XmlIgnore]
+            public bool HasBorder
+            {
+                get => currentWindow.GetWindowStyle<WindowStyles>().HasBorder();
+                set
+                {
+                    var style = currentWindow.GetWindowStyle<WindowStyles>();
+                    style.Set(WindowStyles.WS_MAXIMIZEBOX, value);
+                    style.Set(WindowStyles.WS_MINIMIZEBOX, value);
+                    style.Set(WindowStyles.WS_SIZEBOX, value);
+                    style.Set(WindowStyles.WS_SYSMENU, value);
+                    style.Set(WindowStyles.WS_CAPTION, value);
+                    currentWindow.SetWindowStyleAsync(style).Wait();
+                }
+            }
 
             public bool GetPosition()
             {
@@ -186,8 +202,8 @@ namespace appsizerGUI
 
             public async Task MakeBorderless(bool aboveTaskbar = false)
             {
-                await SetWindowStyleAsync(new WindowStyle<WindowStyles>((int)WindowStyles.WS_VISIBLE));
-                await SetWindowStyleAsync(new WindowStyle<WindowExStyles>((int)WindowExStyles.WS_EX_APPWINDOW));
+                await SetWindowStyleAsync(new WindowStyle<WindowStyles>((uint)WindowStyles.WS_VISIBLE));
+                await SetWindowStyleAsync(new WindowStyle<WindowExStyles>((uint)WindowExStyles.WS_EX_APPWINDOW));
 
                 if (aboveTaskbar)
                     SetPosition(0, 0, WorkingAreaWidth, WorkingAreaHeight);
@@ -240,38 +256,47 @@ namespace appsizerGUI
 
         public class WindowStyle<T> where T : Enum
         {
-            public int Style { get; set; }
+            public uint Style { get; set; }
 
             public WindowStyle() => Style = 0;
-            public WindowStyle(int style) => Style = style;
+            public WindowStyle(uint style) => Style = style;
 
             public bool Is(T style)
             {
-                var s = Convert.ToInt32(style);
+                var s = Convert.ToUInt32(style);
                 return (Style & s) == s;
             }
 
             public void Set(T style, bool value)
             {
-                var s = Convert.ToInt32(style);
+                var s = Convert.ToUInt32(style);
                 Style = value ? (Style | s) : (Style & ~s);
             }
         }
 
-        public enum WindowStyles
+        public enum WindowStyles : uint
         {
-            WS_MAXIMIZE = 0x01000000,
-            WS_MINIMIZE = 0x20000000,
-            WS_CAPTION = 0x00C00000,
-            WS_SYSMENU = 0x00080000,
-            WS_SIZEBOX = 0x00040000,
-            WS_MAXIMIZEBOX = 0x00010000,
-            WS_MINIMIZEBOX = 0x00020000,
-            WS_VISIBLE = 0x10000000,
-            WS_DISABLED = 0x08000000,
+            WS_MAXIMIZEBOX = 0x0001_0000,
+            WS_MINIMIZEBOX = 0x0002_0000,
+            //WS_GROUP = 0x0002_0000,
+            WS_SIZEBOX = 0x0004_0000,
+            WS_SYSMENU = 0x0008_0000,
+            WS_HSCROLL = 0x0010_0000,
+            WS_VSCROLL = 0x0020_0000,
+            //WS_DLGFRAME = 0x0040_0000,
+            //WS_BORDER = 0x0080_0000,
+            WS_CAPTION = 0x00C0_0000,
+            WS_MAXIMIZE = 0x0100_0000,
+            WS_CLIPCHILDREN = 0x0200_0000,
+            WS_CLIPSIBLINGS = 0x0400_0000,
+            WS_DISABLED = 0x0800_0000,
+            WS_VISIBLE = 0x1000_0000,
+            WS_MINIMIZE = 0x2000_0000,
+            WS_CHILD = 0x4000_0000,
+            WS_POPUP = 0x8000_0000,
         }
 
-        public enum WindowExStyles
+        public enum WindowExStyles : uint
         {
             WS_EX_TOPMOST = 0x00000008,
             WS_EX_TOOLWINDOW = 0x00000080,
@@ -550,5 +575,10 @@ namespace appsizerGUI
 
             return success;
         }
+    }
+
+    public static class WindowStyleExtensions
+    {
+        public static bool HasBorder(this WindowStyle<WindowStyles> style) => style.Is(WindowStyles.WS_SIZEBOX) && style.Is(WindowStyles.WS_CAPTION);
     }
 }

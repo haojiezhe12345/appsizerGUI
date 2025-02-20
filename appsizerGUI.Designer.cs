@@ -74,6 +74,7 @@ namespace appsizerGUI
             this.quickResizeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.quickResizeBorderlessFullscreen = new System.Windows.Forms.ToolStripMenuItem();
             this.quickResizeBorderlessAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolsHasBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
@@ -425,51 +426,52 @@ namespace appsizerGUI
             // windowToolsMenu
             // 
             this.windowToolsMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.windowToolsAlwaysOnTop,
             this.toolStripMenuItem3,
+            this.windowToolsAlwaysOnTop,
+            this.windowToolsHasBorder,
             this.windowToolsShowWindow,
             this.windowToolsStyleSeparatorStart,
             this.windowToolsStyleSeparatorEnd,
             this.windowToolsBorder});
             this.windowToolsMenu.Name = "windowToolsMenu";
-            this.windowToolsMenu.Size = new System.Drawing.Size(162, 104);
+            this.windowToolsMenu.Size = new System.Drawing.Size(181, 148);
             // 
             // windowToolsAlwaysOnTop
             // 
             this.windowToolsAlwaysOnTop.CheckOnClick = true;
             this.windowToolsAlwaysOnTop.Name = "windowToolsAlwaysOnTop";
-            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(161, 22);
+            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(180, 22);
             this.windowToolsAlwaysOnTop.Text = "Always on top";
             this.windowToolsAlwaysOnTop.Click += new System.EventHandler(this.OnAlwaysOnTopClicked);
             // 
             // toolStripMenuItem3
             // 
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
             this.toolStripMenuItem3.Text = "Put to center";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
             // 
             // windowToolsShowWindow
             // 
             this.windowToolsShowWindow.Name = "windowToolsShowWindow";
-            this.windowToolsShowWindow.Size = new System.Drawing.Size(161, 22);
+            this.windowToolsShowWindow.Size = new System.Drawing.Size(180, 22);
             this.windowToolsShowWindow.Text = "ShowWindow";
             // 
             // windowToolsStyleSeparatorStart
             // 
             this.windowToolsStyleSeparatorStart.Name = "windowToolsStyleSeparatorStart";
-            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(158, 6);
+            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(177, 6);
             // 
             // windowToolsStyleSeparatorEnd
             // 
             this.windowToolsStyleSeparatorEnd.Name = "windowToolsStyleSeparatorEnd";
-            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(158, 6);
+            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(177, 6);
             // 
             // windowToolsBorder
             // 
             this.windowToolsBorder.Enabled = false;
             this.windowToolsBorder.Name = "windowToolsBorder";
-            this.windowToolsBorder.Size = new System.Drawing.Size(161, 22);
+            this.windowToolsBorder.Size = new System.Drawing.Size(180, 22);
             this.windowToolsBorder.Text = "Border: (-, -, -, -)";
             // 
             // toolStripMenuItem2
@@ -511,6 +513,13 @@ namespace appsizerGUI
             this.quickResizeBorderlessAboveTaskbar.Size = new System.Drawing.Size(212, 22);
             this.quickResizeBorderlessAboveTaskbar.Text = "Borderless (above taskbar)";
             this.quickResizeBorderlessAboveTaskbar.Click += new System.EventHandler(this.OnBorderlessAboveTaskbarClick);
+            // 
+            // windowToolsHasBorder
+            // 
+            this.windowToolsHasBorder.Name = "windowToolsHasBorder";
+            this.windowToolsHasBorder.Size = new System.Drawing.Size(180, 22);
+            this.windowToolsHasBorder.Text = "Window border";
+            this.windowToolsHasBorder.Click += new System.EventHandler(this.OnToggleBorderClicked);
             // 
             // appsizerGUI
             // 
@@ -609,6 +618,7 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessFullscreen;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessAboveTaskbar;
+        private System.Windows.Forms.ToolStripMenuItem windowToolsHasBorder;
     }
 }
 

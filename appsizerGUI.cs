@@ -309,6 +309,9 @@ namespace appsizerGUI
             // Always on top
             windowToolsAlwaysOnTop.Checked = windowExStyle.Is(WindowExStyles.WS_EX_TOPMOST);
 
+            // Window has border
+            windowToolsHasBorder.Checked = windowStyle.HasBorder();
+
             // Border
             windowToolsBorder.Text = $"Border: ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
 
@@ -349,6 +352,12 @@ namespace appsizerGUI
             currentWindow.SetAlwaysOnTop(windowToolsAlwaysOnTop.Checked);
         }
 
+        private void OnToggleBorderClicked(object sender, EventArgs e)
+        {
+            currentWindow.HasBorder = !windowToolsHasBorder.Checked;
+            UpdateView();
+        }
+
         private void OnQuickResizeClick(object sender, EventArgs e)
         {
             var resolutions = new List<(int width, int height, string description)>
@@ -382,10 +391,7 @@ namespace appsizerGUI
             quickResizeBorderlessFullscreen.Checked = false;
             quickResizeBorderlessAboveTaskbar.Checked = false;
 
-            var windowStyle = currentWindow.GetWindowStyle<WindowStyles>();
-
-            if (!windowStyle.Is(WindowStyles.WS_SIZEBOX) &&
-                !windowStyle.Is(WindowStyles.WS_CAPTION) &&
+            if (!currentWindow.HasBorder &&
                 currentWindow.X == 0 &&
                 currentWindow.Y == 0)
             {
