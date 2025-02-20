@@ -17,7 +17,11 @@ namespace appsizerGUI
         {
             InitializeComponent();
 
-            windowOperationControls = new Control[] { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, btnRefresh, btnQuickResize, btnWindowTools, btnApply };
+            windowOperationControls = new Control[] {
+                btnSaveWindow, btnRemoveWindow,
+                windowX, windowY, windowWidth, windowHeight,
+                btnRefresh, btnQuickResize, btnWindowTools, btnApply,
+            };
             UpdateWindowControlsEnabledStatus();
 
             foreach (int m in Enum.GetValues(typeof(BorderCalibrationMethod)))
@@ -151,15 +155,10 @@ namespace appsizerGUI
                 control.Enabled = enabled;
             }
 
-            if (enabled)
-            {
-                uiUpdateHandlerEnabled = true;
-            }
-            else
-            {
-                uiUpdateHandlerEnabled = false;
-                statusLabel.Text = "Please select a window first!";
-            }
+            copyStatusMenu.Enabled = enabled;
+            uiUpdateHandlerEnabled = enabled;
+
+            if (!enabled) statusLabel.Text = "Please select a window first!";
         }
 
         private void ShowDesktopSaveSuccessMessage(string name, (int newTotal, int updated) updateResult)

@@ -61,10 +61,16 @@ namespace appsizerGUI
             this.btnSaveWindow = new System.Windows.Forms.Button();
             this.btnRemoveWindow = new System.Windows.Forms.Button();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.copyStatusMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyStatusProcessName = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStatusPID = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStatusClass = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyStatusHandle = new System.Windows.Forms.ToolStripMenuItem();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.windowToolsMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.windowToolsAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolsAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowToolsHasBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolsShowWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolsStyleSeparatorStart = new System.Windows.Forms.ToolStripSeparator();
             this.windowToolsStyleSeparatorEnd = new System.Windows.Forms.ToolStripSeparator();
@@ -74,13 +80,13 @@ namespace appsizerGUI
             this.quickResizeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.quickResizeBorderlessFullscreen = new System.Windows.Forms.ToolStripMenuItem();
             this.quickResizeBorderlessAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
-            this.windowToolsHasBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowX)).BeginInit();
             this.statusStrip1.SuspendLayout();
+            this.copyStatusMenu.SuspendLayout();
             this.windowToolsMenu.SuspendLayout();
             this.quickResizeMenu.SuspendLayout();
             this.SuspendLayout();
@@ -408,6 +414,7 @@ namespace appsizerGUI
             // 
             // statusStrip1
             // 
+            this.statusStrip1.ContextMenuStrip = this.copyStatusMenu;
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
             this.statusStrip1.Location = new System.Drawing.Point(0, 147);
@@ -416,6 +423,44 @@ namespace appsizerGUI
             this.statusStrip1.SizingGrip = false;
             this.statusStrip1.TabIndex = 0;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // copyStatusMenu
+            // 
+            this.copyStatusMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyStatusProcessName,
+            this.copyStatusPID,
+            this.copyStatusClass,
+            this.copyStatusHandle});
+            this.copyStatusMenu.Name = "copyStatusMenu";
+            this.copyStatusMenu.Size = new System.Drawing.Size(181, 114);
+            // 
+            // copyStatusProcessName
+            // 
+            this.copyStatusProcessName.Name = "copyStatusProcessName";
+            this.copyStatusProcessName.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusProcessName.Text = "Copy process name";
+            this.copyStatusProcessName.Click += new System.EventHandler(this.OnCopyStatusProcessName);
+            // 
+            // copyStatusPID
+            // 
+            this.copyStatusPID.Name = "copyStatusPID";
+            this.copyStatusPID.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusPID.Text = "Copy PID";
+            this.copyStatusPID.Click += new System.EventHandler(this.OnCopyStatusPID);
+            // 
+            // copyStatusClass
+            // 
+            this.copyStatusClass.Name = "copyStatusClass";
+            this.copyStatusClass.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusClass.Text = "Copy class";
+            this.copyStatusClass.Click += new System.EventHandler(this.OnCopyStatusClass);
+            // 
+            // copyStatusHandle
+            // 
+            this.copyStatusHandle.Name = "copyStatusHandle";
+            this.copyStatusHandle.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusHandle.Text = "Copy handle";
+            this.copyStatusHandle.Click += new System.EventHandler(this.OnCopyStatusHandle);
             // 
             // statusLabel
             // 
@@ -434,44 +479,51 @@ namespace appsizerGUI
             this.windowToolsStyleSeparatorEnd,
             this.windowToolsBorder});
             this.windowToolsMenu.Name = "windowToolsMenu";
-            this.windowToolsMenu.Size = new System.Drawing.Size(181, 148);
+            this.windowToolsMenu.Size = new System.Drawing.Size(162, 126);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItem3.Text = "Put to center";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
             // 
             // windowToolsAlwaysOnTop
             // 
             this.windowToolsAlwaysOnTop.CheckOnClick = true;
             this.windowToolsAlwaysOnTop.Name = "windowToolsAlwaysOnTop";
-            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(180, 22);
+            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(161, 22);
             this.windowToolsAlwaysOnTop.Text = "Always on top";
             this.windowToolsAlwaysOnTop.Click += new System.EventHandler(this.OnAlwaysOnTopClicked);
             // 
-            // toolStripMenuItem3
+            // windowToolsHasBorder
             // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
-            this.toolStripMenuItem3.Text = "Put to center";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
+            this.windowToolsHasBorder.Name = "windowToolsHasBorder";
+            this.windowToolsHasBorder.Size = new System.Drawing.Size(161, 22);
+            this.windowToolsHasBorder.Text = "Window border";
+            this.windowToolsHasBorder.Click += new System.EventHandler(this.OnToggleBorderClicked);
             // 
             // windowToolsShowWindow
             // 
             this.windowToolsShowWindow.Name = "windowToolsShowWindow";
-            this.windowToolsShowWindow.Size = new System.Drawing.Size(180, 22);
+            this.windowToolsShowWindow.Size = new System.Drawing.Size(161, 22);
             this.windowToolsShowWindow.Text = "ShowWindow";
             // 
             // windowToolsStyleSeparatorStart
             // 
             this.windowToolsStyleSeparatorStart.Name = "windowToolsStyleSeparatorStart";
-            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(177, 6);
+            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(158, 6);
             // 
             // windowToolsStyleSeparatorEnd
             // 
             this.windowToolsStyleSeparatorEnd.Name = "windowToolsStyleSeparatorEnd";
-            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(177, 6);
+            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(158, 6);
             // 
             // windowToolsBorder
             // 
             this.windowToolsBorder.Enabled = false;
             this.windowToolsBorder.Name = "windowToolsBorder";
-            this.windowToolsBorder.Size = new System.Drawing.Size(180, 22);
+            this.windowToolsBorder.Size = new System.Drawing.Size(161, 22);
             this.windowToolsBorder.Text = "Border: (-, -, -, -)";
             // 
             // toolStripMenuItem2
@@ -513,13 +565,6 @@ namespace appsizerGUI
             this.quickResizeBorderlessAboveTaskbar.Size = new System.Drawing.Size(212, 22);
             this.quickResizeBorderlessAboveTaskbar.Text = "Borderless (above taskbar)";
             this.quickResizeBorderlessAboveTaskbar.Click += new System.EventHandler(this.OnBorderlessAboveTaskbarClick);
-            // 
-            // windowToolsHasBorder
-            // 
-            this.windowToolsHasBorder.Name = "windowToolsHasBorder";
-            this.windowToolsHasBorder.Size = new System.Drawing.Size(180, 22);
-            this.windowToolsHasBorder.Text = "Window border";
-            this.windowToolsHasBorder.Click += new System.EventHandler(this.OnToggleBorderClicked);
             // 
             // appsizerGUI
             // 
@@ -564,6 +609,7 @@ namespace appsizerGUI
             ((System.ComponentModel.ISupportInitialize)(this.windowX)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
+            this.copyStatusMenu.ResumeLayout(false);
             this.windowToolsMenu.ResumeLayout(false);
             this.quickResizeMenu.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -618,6 +664,11 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessFullscreen;
         private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessAboveTaskbar;
         private System.Windows.Forms.ToolStripMenuItem windowToolsHasBorder;
+        private System.Windows.Forms.ContextMenuStrip copyStatusMenu;
+        private System.Windows.Forms.ToolStripMenuItem copyStatusProcessName;
+        private System.Windows.Forms.ToolStripMenuItem copyStatusPID;
+        private System.Windows.Forms.ToolStripMenuItem copyStatusClass;
+        private System.Windows.Forms.ToolStripMenuItem copyStatusHandle;
     }
 }
 
