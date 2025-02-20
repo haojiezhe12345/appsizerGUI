@@ -5,7 +5,8 @@ using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static appsizerGUI.Core;
+using appsizerGUI.Core;
+using static appsizerGUI.Core.Core;
 using static appsizerGUI.DLLImports;
 
 namespace appsizerGUI

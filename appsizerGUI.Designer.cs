@@ -616,7 +616,6 @@ namespace appsizerGUI
         private System.Windows.Forms.Button btnQuickResize;
         private System.Windows.Forms.ContextMenuStrip quickResizeMenu;
         private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessFullscreen;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessAboveTaskbar;
         private System.Windows.Forms.ToolStripMenuItem windowToolsHasBorder;
     }

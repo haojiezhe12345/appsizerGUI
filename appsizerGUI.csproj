@@ -58,7 +58,11 @@
     <Compile Include="appsizerGUI_TextInputDialog.Designer.cs">
       <DependentUpon>appsizerGUI_TextInputDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core.cs" />
+    <Compile Include="Core\Config.cs" />
+    <Compile Include="Core\Desktop.cs" />
+    <Compile Include="Core\Window.cs" />
+    <Compile Include="Core\WindowStyle.cs" />
+    <Compile Include="Core\Core.cs" />
     <Compile Include="DLLImports.cs" />
     <Compile Include="appsizerGUI.cs">
       <SubType>Form</SubType>
