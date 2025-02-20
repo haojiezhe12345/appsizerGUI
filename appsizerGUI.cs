@@ -172,14 +172,18 @@ namespace appsizerGUI
         public static void AddDownTriangle(this Button button, ContentAlignment align = ContentAlignment.MiddleRight)
         {
             button.ImageAlign = align;
-            button.Paint += DrawTriangleAsync;
+            //button.Resize += DrawTriangleAsync;
+            DrawTriangleAsync(button);
         }
 
         public static void DrawTriangleAsync(object sender, EventArgs e)
         {
-            var button = (Button)sender;
+            DrawTriangleAsync((Button)sender);
+        }
 
-            Task.Run(() =>
+        public static Task DrawTriangleAsync(Button button)
+        {
+            return Task.Run(() =>
             {
                 Task.Delay(10).Wait();
                 int triangleHeight = (int)Math.Round(button.Height * 6.0 / 23.0);

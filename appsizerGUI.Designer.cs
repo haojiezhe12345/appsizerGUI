@@ -432,33 +432,33 @@ namespace appsizerGUI
             this.copyStatusClass,
             this.copyStatusHandle});
             this.copyStatusMenu.Name = "copyStatusMenu";
-            this.copyStatusMenu.Size = new System.Drawing.Size(181, 114);
+            this.copyStatusMenu.Size = new System.Drawing.Size(179, 92);
             // 
             // copyStatusProcessName
             // 
             this.copyStatusProcessName.Name = "copyStatusProcessName";
-            this.copyStatusProcessName.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusProcessName.Size = new System.Drawing.Size(178, 22);
             this.copyStatusProcessName.Text = "Copy process name";
             this.copyStatusProcessName.Click += new System.EventHandler(this.OnCopyStatusProcessName);
             // 
             // copyStatusPID
             // 
             this.copyStatusPID.Name = "copyStatusPID";
-            this.copyStatusPID.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusPID.Size = new System.Drawing.Size(178, 22);
             this.copyStatusPID.Text = "Copy PID";
             this.copyStatusPID.Click += new System.EventHandler(this.OnCopyStatusPID);
             // 
             // copyStatusClass
             // 
             this.copyStatusClass.Name = "copyStatusClass";
-            this.copyStatusClass.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusClass.Size = new System.Drawing.Size(178, 22);
             this.copyStatusClass.Text = "Copy class";
             this.copyStatusClass.Click += new System.EventHandler(this.OnCopyStatusClass);
             // 
             // copyStatusHandle
             // 
             this.copyStatusHandle.Name = "copyStatusHandle";
-            this.copyStatusHandle.Size = new System.Drawing.Size(180, 22);
+            this.copyStatusHandle.Size = new System.Drawing.Size(178, 22);
             this.copyStatusHandle.Text = "Copy handle";
             this.copyStatusHandle.Click += new System.EventHandler(this.OnCopyStatusHandle);
             // 
