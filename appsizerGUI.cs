@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace appsizerGUI
         {
             InitializeComponent();
 
-            windowOperationControls = new Control[] { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, btnRefresh, btnWindowTools, btnApply };
+            windowOperationControls = new Control[] { btnSaveWindow, btnRemoveWindow, windowX, windowY, windowWidth, windowHeight, btnRefresh, btnQuickResize, btnWindowTools, btnApply };
             UpdateWindowControlsEnabledStatus();
 
             foreach (int m in Enum.GetValues(typeof(BorderCalibrationMethod)))
@@ -53,6 +54,7 @@ namespace appsizerGUI
             }
             ((ToolStripMenuItem)menuWindowBorderSelect.DropDownItems[(int)borderCalibrationMethod]).Checked = true;
 
+            btnQuickResize.AddDownTriangle();
             btnWindowTools.AddDownTriangle();
         }
 
@@ -278,6 +280,7 @@ namespace appsizerGUI
 
         private void OnWindowToolsClick(object sender, EventArgs e)
         {
+            // ShowWindow
             windowToolsShowWindow.DropDownItems.Clear();
 
             foreach (int param in Enum.GetValues(typeof(ShowWindowParam)))
@@ -291,6 +294,7 @@ namespace appsizerGUI
                 windowToolsShowWindow.DropDownItems.Add(menuItem);
             }
 
+            // Window styles
             while (windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorEnd) - windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) > 1)
             {
                 windowToolsMenu.Items.RemoveAt(windowToolsMenu.Items.IndexOf(windowToolsStyleSeparatorStart) + 1);
@@ -299,11 +303,13 @@ namespace appsizerGUI
             var windowStyle = currentWindow.GetWindowStyle<WindowStyles>();
             var windowExStyle = currentWindow.GetWindowStyle<WindowExStyles>();
 
-            windowToolsAlwaysOnTop.Checked = windowExStyle.Is(WindowExStyles.WS_EX_TOPMOST);
-
             AddWindowStylesToWindowTools(windowStyle);
             AddWindowStylesToWindowTools(windowExStyle);
 
+            // Always on top
+            windowToolsAlwaysOnTop.Checked = windowExStyle.Is(WindowExStyles.WS_EX_TOPMOST);
+
+            // Border
             windowToolsBorder.Text = $"Border: ({currentWindow.Border.Left}, {currentWindow.Border.Top}, {currentWindow.Border.Right}, {currentWindow.Border.Bottom})";
 
             windowToolsMenu.Show(btnWindowTools, new Point(btnWindowTools.Width, btnWindowTools.Height), ToolStripDropDownDirection.Left);
@@ -338,15 +344,89 @@ namespace appsizerGUI
             UpdateView();
         }
 
-        private async void OnBorderlessClicked(object sender, EventArgs e)
+        private void OnAlwaysOnTopClicked(object sender, EventArgs e)
+        {
+            currentWindow.SetAlwaysOnTop(windowToolsAlwaysOnTop.Checked);
+        }
+
+        private void OnQuickResizeClick(object sender, EventArgs e)
+        {
+            var resolutions = new List<(int width, int height, string description)>
+            {
+                (640, 480, "4:3"),
+                (800, 600, "4:3"),
+                (1024, 768, "4:3"),
+                (1280, 720, "720p"),
+                (1280, 800, "16:10"),
+                (1366, 768, "16:9"),
+                (1600, 900, "16:9"),
+                (1920, 1080, "1080p"),
+                (1920, 1200, "4:3"),
+                (2560, 1080, "21:9"),
+                (2160, 1440, "3:2"),
+                (2560, 1440, "2K"),
+                (2560, 1600, "16:10"),
+                (3440, 1440, "21:9"),
+                (3840, 2160, "4K"),
+                (5120, 2880, "5K"),
+                (7680, 4320, "8K"),
+            };
+
+            quickResizeMenu.Items.Clear();
+
+            quickResizeMenu.Items.AddRange(new ToolStripItem[] {
+                quickResizeBorderlessFullscreen,
+                quickResizeBorderlessAboveTaskbar
+            });
+
+            quickResizeBorderlessFullscreen.Checked = false;
+            quickResizeBorderlessAboveTaskbar.Checked = false;
+
+            var windowStyle = currentWindow.GetWindowStyle<WindowStyles>();
+
+            if (!windowStyle.Is(WindowStyles.WS_SIZEBOX) &&
+                !windowStyle.Is(WindowStyles.WS_CAPTION) &&
+                currentWindow.X == 0 &&
+                currentWindow.Y == 0)
+            {
+                if (currentWindow.Width == ScreenWidth && currentWindow.Height == ScreenHeight)
+                {
+                    quickResizeBorderlessFullscreen.Checked = true;
+                }
+                if (currentWindow.Width == WorkingAreaWidth && currentWindow.Height == WorkingAreaHeight)
+                {
+                    quickResizeBorderlessAboveTaskbar.Checked = true;
+                }
+            }
+
+            foreach (var (width, height, description) in resolutions)
+            {
+                var menuItem = new ToolStripMenuItem()
+                {
+                    Text = $"{width} x {height} ({description})",
+                    Checked = currentWindow.Width == width && currentWindow.Height == height,
+                };
+                menuItem.Click += delegate
+                {
+                    currentWindow.QuickResize(width, height, height <= WorkingAreaHeight);
+                    UpdateView();
+                };
+                quickResizeMenu.Items.Add(menuItem);
+            }
+
+            quickResizeMenu.Show(btnQuickResize, new Point(0, btnQuickResize.Height), ToolStripDropDownDirection.Right);
+        }
+
+        private async void OnBorderlessFullscreenClick(object sender, EventArgs e)
         {
             await currentWindow.MakeBorderless();
             UpdateView();
         }
 
-        private void OnAlwaysOnTopClicked(object sender, EventArgs e)
+        private async void OnBorderlessAboveTaskbarClick(object sender, EventArgs e)
         {
-            currentWindow.SetAlwaysOnTop(windowToolsAlwaysOnTop.Checked);
+            await currentWindow.MakeBorderless(true);
+            UpdateView();
         }
 
         private class DesktopProfileAddDialog : appsizerGUI_TextInputDialog

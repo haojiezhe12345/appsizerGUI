@@ -39,6 +39,7 @@ namespace appsizerGUI
             this.menuDesktopProfileManage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem5 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuOptions = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionBringToFront = new System.Windows.Forms.ToolStripMenuItem();
             this.useAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
             this.menuWindowBorderSelect = new System.Windows.Forms.ToolStripMenuItem();
             this.savedWindowSelector = new System.Windows.Forms.ComboBox();
@@ -62,15 +63,17 @@ namespace appsizerGUI
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.windowToolsMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolsAlwaysOnTop = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolsShowWindow = new System.Windows.Forms.ToolStripMenuItem();
             this.windowToolsStyleSeparatorStart = new System.Windows.Forms.ToolStripSeparator();
             this.windowToolsStyleSeparatorEnd = new System.Windows.Forms.ToolStripSeparator();
             this.windowToolsBorder = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionBringToFront = new System.Windows.Forms.ToolStripMenuItem();
+            this.btnQuickResize = new System.Windows.Forms.Button();
+            this.quickResizeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.quickResizeBorderlessFullscreen = new System.Windows.Forms.ToolStripMenuItem();
+            this.quickResizeBorderlessAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
@@ -78,6 +81,7 @@ namespace appsizerGUI
             ((System.ComponentModel.ISupportInitialize)(this.windowX)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.windowToolsMenu.SuspendLayout();
+            this.quickResizeMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -163,6 +167,15 @@ namespace appsizerGUI
             this.menuOptions.Name = "menuOptions";
             this.menuOptions.Size = new System.Drawing.Size(61, 20);
             this.menuOptions.Text = "&Options";
+            // 
+            // optionBringToFront
+            // 
+            this.optionBringToFront.Checked = true;
+            this.optionBringToFront.CheckOnClick = true;
+            this.optionBringToFront.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.optionBringToFront.Name = "optionBringToFront";
+            this.optionBringToFront.Size = new System.Drawing.Size(293, 22);
+            this.optionBringToFront.Text = "Bring window to front when applying size";
             // 
             // useAboveTaskbar
             // 
@@ -412,59 +425,51 @@ namespace appsizerGUI
             // windowToolsMenu
             // 
             this.windowToolsMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripMenuItem3,
-            this.toolStripMenuItem4,
             this.windowToolsAlwaysOnTop,
+            this.toolStripMenuItem3,
             this.windowToolsShowWindow,
             this.windowToolsStyleSeparatorStart,
             this.windowToolsStyleSeparatorEnd,
             this.windowToolsBorder});
             this.windowToolsMenu.Name = "windowToolsMenu";
-            this.windowToolsMenu.Size = new System.Drawing.Size(183, 126);
-            // 
-            // toolStripMenuItem3
-            // 
-            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(182, 22);
-            this.toolStripMenuItem3.Text = "Put to center";
-            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
-            // 
-            // toolStripMenuItem4
-            // 
-            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-            this.toolStripMenuItem4.Size = new System.Drawing.Size(182, 22);
-            this.toolStripMenuItem4.Text = "Borderless fullscreen";
-            this.toolStripMenuItem4.Click += new System.EventHandler(this.OnBorderlessClicked);
+            this.windowToolsMenu.Size = new System.Drawing.Size(162, 104);
             // 
             // windowToolsAlwaysOnTop
             // 
             this.windowToolsAlwaysOnTop.CheckOnClick = true;
             this.windowToolsAlwaysOnTop.Name = "windowToolsAlwaysOnTop";
-            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(182, 22);
+            this.windowToolsAlwaysOnTop.Size = new System.Drawing.Size(161, 22);
             this.windowToolsAlwaysOnTop.Text = "Always on top";
             this.windowToolsAlwaysOnTop.Click += new System.EventHandler(this.OnAlwaysOnTopClicked);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(161, 22);
+            this.toolStripMenuItem3.Text = "Put to center";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.OnCenterClicked);
             // 
             // windowToolsShowWindow
             // 
             this.windowToolsShowWindow.Name = "windowToolsShowWindow";
-            this.windowToolsShowWindow.Size = new System.Drawing.Size(182, 22);
+            this.windowToolsShowWindow.Size = new System.Drawing.Size(161, 22);
             this.windowToolsShowWindow.Text = "ShowWindow";
             // 
             // windowToolsStyleSeparatorStart
             // 
             this.windowToolsStyleSeparatorStart.Name = "windowToolsStyleSeparatorStart";
-            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(179, 6);
+            this.windowToolsStyleSeparatorStart.Size = new System.Drawing.Size(158, 6);
             // 
             // windowToolsStyleSeparatorEnd
             // 
             this.windowToolsStyleSeparatorEnd.Name = "windowToolsStyleSeparatorEnd";
-            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(179, 6);
+            this.windowToolsStyleSeparatorEnd.Size = new System.Drawing.Size(158, 6);
             // 
             // windowToolsBorder
             // 
             this.windowToolsBorder.Enabled = false;
             this.windowToolsBorder.Name = "windowToolsBorder";
-            this.windowToolsBorder.Size = new System.Drawing.Size(182, 22);
+            this.windowToolsBorder.Size = new System.Drawing.Size(161, 22);
             this.windowToolsBorder.Text = "Border: (-, -, -, -)";
             // 
             // toolStripMenuItem2
@@ -473,14 +478,39 @@ namespace appsizerGUI
             this.toolStripMenuItem2.Size = new System.Drawing.Size(32, 19);
             this.toolStripMenuItem2.Text = "toolStripMenuItem2";
             // 
-            // optionBringToFront
+            // btnQuickResize
             // 
-            this.optionBringToFront.Checked = true;
-            this.optionBringToFront.CheckOnClick = true;
-            this.optionBringToFront.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.optionBringToFront.Name = "optionBringToFront";
-            this.optionBringToFront.Size = new System.Drawing.Size(293, 22);
-            this.optionBringToFront.Text = "Bring window to front when applying size";
+            this.btnQuickResize.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnQuickResize.ImageAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnQuickResize.Location = new System.Drawing.Point(96, 117);
+            this.btnQuickResize.Name = "btnQuickResize";
+            this.btnQuickResize.Size = new System.Drawing.Size(90, 23);
+            this.btnQuickResize.TabIndex = 9;
+            this.btnQuickResize.Text = "Quick resi&ze  ";
+            this.btnQuickResize.UseVisualStyleBackColor = true;
+            this.btnQuickResize.Click += new System.EventHandler(this.OnQuickResizeClick);
+            // 
+            // quickResizeMenu
+            // 
+            this.quickResizeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.quickResizeBorderlessFullscreen,
+            this.quickResizeBorderlessAboveTaskbar});
+            this.quickResizeMenu.Name = "quickResizeMenu";
+            this.quickResizeMenu.Size = new System.Drawing.Size(213, 48);
+            // 
+            // quickResizeBorderlessFullscreen
+            // 
+            this.quickResizeBorderlessFullscreen.Name = "quickResizeBorderlessFullscreen";
+            this.quickResizeBorderlessFullscreen.Size = new System.Drawing.Size(212, 22);
+            this.quickResizeBorderlessFullscreen.Text = "Borderless (fullscreen)";
+            this.quickResizeBorderlessFullscreen.Click += new System.EventHandler(this.OnBorderlessFullscreenClick);
+            // 
+            // quickResizeBorderlessAboveTaskbar
+            // 
+            this.quickResizeBorderlessAboveTaskbar.Name = "quickResizeBorderlessAboveTaskbar";
+            this.quickResizeBorderlessAboveTaskbar.Size = new System.Drawing.Size(212, 22);
+            this.quickResizeBorderlessAboveTaskbar.Text = "Borderless (above taskbar)";
+            this.quickResizeBorderlessAboveTaskbar.Click += new System.EventHandler(this.OnBorderlessAboveTaskbarClick);
             // 
             // appsizerGUI
             // 
@@ -491,6 +521,7 @@ namespace appsizerGUI
             this.Controls.Add(this.btnRemoveWindow);
             this.Controls.Add(this.btnSaveWindow);
             this.Controls.Add(this.btnApply);
+            this.Controls.Add(this.btnQuickResize);
             this.Controls.Add(this.btnWindowTools);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.windowBottom);
@@ -525,6 +556,7 @@ namespace appsizerGUI
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.windowToolsMenu.ResumeLayout(false);
+            this.quickResizeMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -563,7 +595,6 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripSeparator windowToolsStyleSeparatorStart;
         private System.Windows.Forms.ToolStripMenuItem windowToolsBorder;
         private System.Windows.Forms.ToolStripSeparator windowToolsStyleSeparatorEnd;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
         private System.Windows.Forms.ToolStripMenuItem windowToolsAlwaysOnTop;
         private System.Windows.Forms.ToolStripMenuItem dummyWindowToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
@@ -573,6 +604,11 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem menuWindowBorderSelect;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem5;
         private System.Windows.Forms.ToolStripMenuItem optionBringToFront;
+        private System.Windows.Forms.Button btnQuickResize;
+        private System.Windows.Forms.ContextMenuStrip quickResizeMenu;
+        private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessFullscreen;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripMenuItem quickResizeBorderlessAboveTaskbar;
     }
 }
 

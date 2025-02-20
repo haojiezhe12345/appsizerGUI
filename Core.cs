@@ -121,13 +121,13 @@ namespace appsizerGUI
 
                     var borderWidth = (windowWidth - clientWidth) / 2;
 
-                    if (windowStyle.Is(WindowStyles.WS_MAXIMIZE))
-                    {
-                        Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
-                    }
-                    else if (borderCalibrationMethod == BorderCalibrationMethod.ClientArea)
+                    if (borderCalibrationMethod == BorderCalibrationMethod.ClientArea)
                     {
                         Border = new Rect { Top = windowHeight - clientHeight - borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
+                    }
+                    else if (windowStyle.Is(WindowStyles.WS_MAXIMIZE))
+                    {
+                        Border = new Rect { Top = borderWidth, Left = borderWidth, Right = borderWidth, Bottom = borderWidth };
                     }
                     else
                     {
@@ -170,21 +170,29 @@ namespace appsizerGUI
                 return SetWindowPos(Handle, (IntPtr)(value ? -1 : -2), 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
             }
 
-            public bool PutToCenter(bool aboveTaskbar = false)
+            public bool QuickResize(int width, int height, bool aboveTaskbar = false)
             {
                 return currentWindow.SetPosition(
-                      (ScreenWidth - Width) / 2,
-                      ((aboveTaskbar ? WorkingAreaHeight : ScreenHeight) - Height) / 2,
-                      Width, Height
-                  );
+                      (ScreenWidth - width) / 2,
+                      ((aboveTaskbar ? WorkingAreaHeight : ScreenHeight) - height) / 2,
+                      width, height
+                );
             }
 
-            public async Task MakeBorderless()
+            public bool PutToCenter(bool aboveTaskbar = false)
+            {
+                return QuickResize(Width, Height, aboveTaskbar);
+            }
+
+            public async Task MakeBorderless(bool aboveTaskbar = false)
             {
                 await SetWindowStyleAsync(new WindowStyle<WindowStyles>((int)WindowStyles.WS_VISIBLE));
                 await SetWindowStyleAsync(new WindowStyle<WindowExStyles>((int)WindowExStyles.WS_EX_APPWINDOW));
 
-                SetPosition(0, 0, ScreenWidth, ScreenHeight);
+                if (aboveTaskbar)
+                    SetPosition(0, 0, WorkingAreaWidth, WorkingAreaHeight);
+                else
+                    SetPosition(0, 0, ScreenWidth, ScreenHeight);
             }
 
             public bool FindWindow()
