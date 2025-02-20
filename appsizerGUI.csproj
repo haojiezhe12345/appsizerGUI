@@ -52,7 +52,19 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="appsizerGUI.CopyStatusMenu.cs">
+    <Compile Include="appsizerGUI.Desktop.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="appsizerGUI.WindowSave.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="appsizerGUI.WindowTools.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="appsizerGUI.QuickResize.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="appsizerGUI.StatusStrip.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="appsizerGUI_TextInputDialog.cs">
