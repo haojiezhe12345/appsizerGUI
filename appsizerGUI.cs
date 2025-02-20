@@ -363,19 +363,27 @@ namespace appsizerGUI
             var resolutions = new List<(int width, int height, string description)>
             {
                 (640, 480, "4:3"),
+                (854, 480, "16:9"),
                 (800, 600, "4:3"),
+                (960, 540, "16:9"),
+                (0, 0, ""),
                 (1024, 768, "4:3"),
                 (1280, 720, "720p"),
                 (1280, 800, "16:10"),
                 (1366, 768, "16:9"),
                 (1600, 900, "16:9"),
+                (0, 0, ""),
+                (1440, 1080, "4:3"),
                 (1920, 1080, "1080p"),
-                (1920, 1200, "4:3"),
+                (1920, 1200, "16:10"),
                 (2560, 1080, "21:9"),
+                (0, 0, ""),
+                (1920, 1440, "4:3"),
                 (2160, 1440, "3:2"),
-                (2560, 1440, "2K"),
+                (2560, 1440, "2.5K"),
                 (2560, 1600, "16:10"),
                 (3440, 1440, "21:9"),
+                (0, 0, ""),
                 (3840, 2160, "4K"),
                 (5120, 2880, "5K"),
                 (7680, 4320, "8K"),
@@ -385,7 +393,8 @@ namespace appsizerGUI
 
             quickResizeMenu.Items.AddRange(new ToolStripItem[] {
                 quickResizeBorderlessFullscreen,
-                quickResizeBorderlessAboveTaskbar
+                quickResizeBorderlessAboveTaskbar,
+                new ToolStripSeparator(),
             });
 
             quickResizeBorderlessFullscreen.Checked = false;
@@ -407,6 +416,12 @@ namespace appsizerGUI
 
             foreach (var (width, height, description) in resolutions)
             {
+                if (width == 0)
+                {
+                    quickResizeMenu.Items.Add(new ToolStripSeparator());
+                    continue;
+                }
+
                 var menuItem = new ToolStripMenuItem()
                 {
                     Text = $"{width} x {height} ({description})",
