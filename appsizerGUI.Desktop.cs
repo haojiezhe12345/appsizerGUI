@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Windows.Forms;
+using appsizerGUI.Dialogs;
 using static appsizerGUI.Core.Core;
 
 namespace appsizerGUI
@@ -42,7 +43,7 @@ namespace appsizerGUI
                 var menuItemManage = new ToolStripMenuItem(desktop.Name);
 
                 var menuItemManageRename = new ToolStripMenuItem("Rename");
-                menuItemManageRename.Click += delegate { new DesktopProfileRenameDialog(desktop.Name).ShowDialog(this); };
+                menuItemManageRename.Click += delegate { new DesktopProfileRenameDialog(desktop.Name).ShowDialog(); };
 
                 var menuItemManageDelete = new ToolStripMenuItem("Delete");
                 menuItemManageDelete.Click += delegate
@@ -73,7 +74,7 @@ namespace appsizerGUI
 
         private void OnAddDesktopProfileClick(object sender, EventArgs e)
         {
-            new DesktopProfileAddDialog().ShowDialog(this);
+            new DesktopProfileAddDialog().ShowDialog();
         }
 
         private void OnShowAllMinimizedWindowsClick(object sender, EventArgs e)
@@ -81,7 +82,7 @@ namespace appsizerGUI
             statusLabel.Text = $"Restored {ShowAllMinimizedWindows()} minimized windows";
         }
 
-        private class DesktopProfileAddDialog : appsizerGUI_TextInputDialog
+        private class DesktopProfileAddDialog : TextInputDialog
         {
             public DesktopProfileAddDialog()
             {
@@ -112,7 +113,7 @@ namespace appsizerGUI
             }
         }
 
-        private class DesktopProfileRenameDialog : appsizerGUI_TextInputDialog
+        private class DesktopProfileRenameDialog : TextInputDialog
         {
             private readonly string profileName;
 

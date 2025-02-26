@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace appsizerGUI
+namespace appsizerGUI.Dialogs
 {
-    public partial class appsizerGUI_TextInputDialog : Form
+    public partial class TextInputDialog : Form
     {
-        public appsizerGUI_TextInputDialog()
+        public TextInputDialog()
         {
             InitializeComponent();
         }

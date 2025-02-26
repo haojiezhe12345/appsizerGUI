@@ -1,14 +1,15 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-using System;
+using appsizerGUI.Dialogs;
 using static appsizerGUI.Core.Core;
 using static appsizerGUI.DLLImports;
 
 namespace appsizerGUI.Core
 {
-    public class Window
+    public partial class Window
     {
         public string ProcessPath { get; set; }
         [XmlIgnore]
@@ -49,12 +50,8 @@ namespace appsizerGUI.Core
             set
             {
                 var style = currentWindow.GetWindowStyle<WindowStyles>();
-                style.Set(WindowStyles.WS_MAXIMIZEBOX, value);
-                style.Set(WindowStyles.WS_MINIMIZEBOX, value);
-                style.Set(WindowStyles.WS_SIZEBOX, value);
-                style.Set(WindowStyles.WS_SYSMENU, value);
-                style.Set(WindowStyles.WS_CAPTION, value);
-                currentWindow.SetWindowStyleAsync(style).Wait();
+                style.SetBorder(value);
+                currentWindow.SetWindowStyle(style);
             }
         }
 
@@ -138,24 +135,6 @@ namespace appsizerGUI.Core
             return false;
         }
 
-        public WindowStyle<T> GetWindowStyle<T>() where T : Enum
-        {
-            return new WindowStyle<T>(GetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE));
-        }
-
-        public Task<int> SetWindowStyleAsync<T>(WindowStyle<T> style) where T : Enum
-        {
-            return Task.Run(async () =>
-            {
-                var result = SetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE, style.Style);
-
-                await Task.Delay(10);
-
-                GetPosition();
-                return result;
-            });
-        }
-
         public bool SetAlwaysOnTop(bool value)
         {
             return SetWindowPos(Handle, (IntPtr)(value ? -1 : -2), 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
@@ -163,6 +142,22 @@ namespace appsizerGUI.Core
 
         public bool QuickResize(int width, int height, bool aboveTaskbar = false)
         {
+            if (height > ScreenHeight)
+            {
+                var windowStyle = GetWindowStyle<WindowStyles>();
+                if (windowStyle.HasBorder() || !windowStyle.Is(WindowStyles.WS_POPUP))
+                {
+                    if (!SimpleConfirmDialog.ShowConfirm("This will hide the window border, continue?"))
+                    {
+                        return false;
+                    }
+
+                    windowStyle.SetBorder(false);
+                    windowStyle.Set(WindowStyles.WS_POPUP, true);
+                    SetWindowStyle(windowStyle);
+                }
+            }
+
             return currentWindow.SetPosition(
                   (ScreenWidth - width) / 2,
                   ((aboveTaskbar ? WorkingAreaHeight : ScreenHeight) - height) / 2,
@@ -177,7 +172,7 @@ namespace appsizerGUI.Core
 
         public async Task MakeBorderless(bool aboveTaskbar = false)
         {
-            await SetWindowStyleAsync(new WindowStyle<WindowStyles>((uint)WindowStyles.WS_VISIBLE));
+            await SetWindowStyleAsync(new WindowStyle<WindowStyles>((uint)WindowStyles.WS_VISIBLE | (uint)WindowStyles.WS_POPUP));
             await SetWindowStyleAsync(new WindowStyle<WindowExStyles>((uint)WindowExStyles.WS_EX_APPWINDOW));
 
             if (aboveTaskbar)

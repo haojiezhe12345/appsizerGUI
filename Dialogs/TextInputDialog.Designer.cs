@@ -1,6 +1,6 @@
-﻿namespace appsizerGUI
+﻿namespace appsizerGUI.Dialogs
 {
-    partial class appsizerGUI_TextInputDialog
+    partial class TextInputDialog
     {
         /// <summary>
         /// Required designer variable.

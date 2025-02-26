@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using static appsizerGUI.DLLImports;
 
 namespace appsizerGUI.Core
 {
@@ -24,7 +26,14 @@ namespace appsizerGUI.Core
 
     public static class WindowStyleExtensions
     {
-        public static bool HasBorder(this WindowStyle<WindowStyles> style) => style.Is(WindowStyles.WS_SIZEBOX) && style.Is(WindowStyles.WS_CAPTION);
+        public static bool HasBorder(this WindowStyle<WindowStyles> style) => style.Is(WindowStyles.WS_SIZEBOX) || style.Is(WindowStyles.WS_CAPTION);
+        public static void SetBorder(this WindowStyle<WindowStyles> style, bool hasBorder) {
+            style.Set(WindowStyles.WS_MAXIMIZEBOX, hasBorder);
+            style.Set(WindowStyles.WS_MINIMIZEBOX, hasBorder);
+            style.Set(WindowStyles.WS_SIZEBOX, hasBorder);
+            style.Set(WindowStyles.WS_SYSMENU, hasBorder);
+            style.Set(WindowStyles.WS_CAPTION, hasBorder);
+        }
     }
 
     public enum WindowStyles : uint
@@ -57,5 +66,33 @@ namespace appsizerGUI.Core
         WS_EX_CLIENTEDGE = 0x00000200,
         WS_EX_APPWINDOW = 0x00040000,
         WS_EX_NOACTIVATE = 0x08000000,
+    }
+
+    public partial class Window
+    {
+        public WindowStyle<T> GetWindowStyle<T>() where T : Enum
+        {
+            return new WindowStyle<T>(GetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE));
+        }
+
+        public Task<int> SetWindowStyleAsync<T>(WindowStyle<T> style) where T : Enum
+        {
+            return Task.Run(async () =>
+            {
+                var result = SetWindowLong(Handle, typeof(T) == typeof(WindowStyles) ? GWL_STYLE : GWL_EXSTYLE, style.Style);
+
+                await Task.Delay(10);
+
+                GetPosition();
+                return result;
+            });
+        }
+
+        public int SetWindowStyle<T>(WindowStyle<T> style) where T : Enum
+        {
+            var task = SetWindowStyleAsync(style);
+            task.Wait();
+            return task.Result;
+        }
     }
 }

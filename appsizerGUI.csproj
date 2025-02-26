@@ -67,11 +67,17 @@
     <Compile Include="appsizerGUI.StatusStrip.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="appsizerGUI_TextInputDialog.cs">
+    <Compile Include="Dialogs\ConfirmDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="appsizerGUI_TextInputDialog.Designer.cs">
-      <DependentUpon>appsizerGUI_TextInputDialog.cs</DependentUpon>
+    <Compile Include="Dialogs\ConfirmDialog.Designer.cs">
+      <DependentUpon>ConfirmDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TextInputDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\TextInputDialog.Designer.cs">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Core\Config.cs" />
     <Compile Include="Core\Desktop.cs" />
@@ -91,8 +97,11 @@
       <DependentUpon>appsizerGUI.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="appsizerGUI_TextInputDialog.resx">
-      <DependentUpon>appsizerGUI_TextInputDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Dialogs\ConfirmDialog.resx">
+      <DependentUpon>ConfirmDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\TextInputDialog.resx">
+      <DependentUpon>TextInputDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
