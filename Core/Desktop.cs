@@ -31,8 +31,6 @@ namespace appsizerGUI.Core
 
         public static (int newTotal, int updated) SaveDesktop(string profileName)
         {
-            config.Reload();
-
             var windows = GetWindowList();
 
             windows.ForEach(x => x.GetPosition());
@@ -71,8 +69,6 @@ namespace appsizerGUI.Core
 
         public static (int windowCount, int successCount) RestoreDesktop(string profileName)
         {
-            config.Reload();
-
             var profile = config.DesktopProfiles.First(x => x.Name == profileName);
             int success = 0;
 
@@ -118,14 +114,12 @@ namespace appsizerGUI.Core
 
         public static void RenameDesktop(string profileName, string newName)
         {
-            config.Reload();
             config.DesktopProfiles.First(x => x.Name == profileName).Name = newName;
             config.Save();
         }
 
         public static void DeleteDesktop(string profileName)
         {
-            config.Reload();
             config.DesktopProfiles.RemoveAll(x => x.Name == profileName);
             config.Save();
         }

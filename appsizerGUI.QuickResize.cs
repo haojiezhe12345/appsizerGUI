@@ -1,4 +1,5 @@
-﻿using System;
+﻿using appsizerGUI.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -10,8 +11,9 @@ namespace appsizerGUI
     {
         private void OnQuickResizeClick(object sender, EventArgs e)
         {
-            var resolutions = new List<(int width, int height, string description)>
+            var resolutions = new List<(int width, int height, string description)>(config.CustomResolutions)
             {
+                (0, 0, ""),
                 (640, 480, "4:3"),
                 (854, 480, "16:9"),
                 (800, 600, "4:3"),
@@ -45,6 +47,8 @@ namespace appsizerGUI
                 quickResizeBorderlessFullscreen,
                 quickResizeBorderlessAboveTaskbar,
                 new ToolStripSeparator(),
+                quickResizeAddCustomResolution,
+                quickResizeDeleteCustomResolution,
             });
 
             quickResizeBorderlessFullscreen.Checked = false;
@@ -64,6 +68,20 @@ namespace appsizerGUI
                 }
             }
 
+            quickResizeDeleteCustomResolution.DropDownItems.Clear();
+            quickResizeDeleteCustomResolution.Enabled = config.CustomResolutions.Count > 0;
+
+            foreach (var resolution in config.CustomResolutions)
+            {
+                var menuItem = new ToolStripMenuItem($"{resolution.width} x {resolution.height}");
+                menuItem.Click += delegate
+                {
+                    config.CustomResolutions.Remove(resolution);
+                    config.Save();
+                };
+                quickResizeDeleteCustomResolution.DropDownItems.Add(menuItem);
+            }
+
             foreach (var (width, height, description) in resolutions)
             {
                 if (width == 0)
@@ -74,7 +92,7 @@ namespace appsizerGUI
 
                 var menuItem = new ToolStripMenuItem()
                 {
-                    Text = $"{width} x {height} ({description})",
+                    Text = string.IsNullOrEmpty(description) ? $"{width} x {height}" : $"{width} x {height} ({description})",
                     Checked = currentWindow.Width == width && currentWindow.Height == height,
                 };
                 menuItem.Click += delegate
@@ -98,6 +116,42 @@ namespace appsizerGUI
         {
             await currentWindow.MakeBorderless(true);
             UpdateView();
+        }
+
+        private void OnAddCustomResolutionClick(object sender, EventArgs e)
+        {
+            new CustomResolutionAddDialog().ShowDialog();
+        }
+
+        private class CustomResolutionAddDialog : TextInputDialog
+        {
+            public CustomResolutionAddDialog()
+            {
+                Text = "Add a resolution";
+                InputLabel.Text = "Resolution (e.g. 1920x1080):";
+                Width = 200;
+            }
+
+            public override void OnOkClicked(object sender, EventArgs e)
+            {
+                int width, height;
+
+                try
+                {
+                    var parts = Input.Text.Split('x');
+                    width = int.Parse(parts[0]);
+                    height = int.Parse(parts[1]);
+                }
+                catch
+                {
+                    return;
+                }
+
+                config.CustomResolutions.Add((width, height, null));
+                config.Save();
+
+                Close();
+            }
         }
     }
 }

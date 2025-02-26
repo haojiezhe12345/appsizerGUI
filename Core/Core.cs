@@ -73,6 +73,7 @@ namespace appsizerGUI.Core
         public static void SetCurrentWindow(int index)
         {
             currentWindow = config.SavedWindows[index];
+            config.Reload();
             currentWindow.FindWindow();
         }
     }

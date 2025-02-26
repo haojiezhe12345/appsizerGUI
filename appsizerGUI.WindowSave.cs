@@ -33,7 +33,6 @@ namespace appsizerGUI
         private void ListSavedWindows(object sender, EventArgs e)
         {
             savedWindowSelector.Items.Clear();
-            config.Reload();
             foreach (var window in config.SavedWindows)
             {
                 savedWindowSelector.Items.Add(window.Title);

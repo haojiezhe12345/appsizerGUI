@@ -13,6 +13,7 @@ namespace appsizerGUI.Core
     {
         public List<Window> SavedWindows { get; set; } = new List<Window>();
         public List<DesktopProfile> DesktopProfiles { get; set; } = new List<DesktopProfile>();
+        public List<(int width, int height, string description)> CustomResolutions { get; set; } = new List<(int width, int height, string description)>();
 
         public const string ConfigFilePath = "appsizerGUI_config.xml";
 

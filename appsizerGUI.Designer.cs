@@ -80,6 +80,10 @@ namespace appsizerGUI
             this.quickResizeMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.quickResizeBorderlessFullscreen = new System.Windows.Forms.ToolStripMenuItem();
             this.quickResizeBorderlessAboveTaskbar = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.quickResizeAddCustomResolution = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.quickResizeDeleteCustomResolution = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.windowHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.windowWidth)).BeginInit();
@@ -548,9 +552,13 @@ namespace appsizerGUI
             // 
             this.quickResizeMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.quickResizeBorderlessFullscreen,
-            this.quickResizeBorderlessAboveTaskbar});
+            this.quickResizeBorderlessAboveTaskbar,
+            this.toolStripSeparator1,
+            this.quickResizeAddCustomResolution,
+            this.quickResizeDeleteCustomResolution,
+            this.toolStripSeparator2});
             this.quickResizeMenu.Name = "quickResizeMenu";
-            this.quickResizeMenu.Size = new System.Drawing.Size(213, 48);
+            this.quickResizeMenu.Size = new System.Drawing.Size(213, 126);
             // 
             // quickResizeBorderlessFullscreen
             // 
@@ -565,6 +573,29 @@ namespace appsizerGUI
             this.quickResizeBorderlessAboveTaskbar.Size = new System.Drawing.Size(212, 22);
             this.quickResizeBorderlessAboveTaskbar.Text = "Borderless (above taskbar)";
             this.quickResizeBorderlessAboveTaskbar.Click += new System.EventHandler(this.OnBorderlessAboveTaskbarClick);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(209, 6);
+            // 
+            // quickResizeAddCustomResolution
+            // 
+            this.quickResizeAddCustomResolution.Name = "quickResizeAddCustomResolution";
+            this.quickResizeAddCustomResolution.Size = new System.Drawing.Size(212, 22);
+            this.quickResizeAddCustomResolution.Text = "Add custom resolution...";
+            this.quickResizeAddCustomResolution.Click += new System.EventHandler(this.OnAddCustomResolutionClick);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(209, 6);
+            // 
+            // quickResizeDeleteCustomResolution
+            // 
+            this.quickResizeDeleteCustomResolution.Name = "quickResizeDeleteCustomResolution";
+            this.quickResizeDeleteCustomResolution.Size = new System.Drawing.Size(212, 22);
+            this.quickResizeDeleteCustomResolution.Text = "Delete custom resolution";
             // 
             // appsizerGUI
             // 
@@ -669,6 +700,10 @@ namespace appsizerGUI
         private System.Windows.Forms.ToolStripMenuItem copyStatusPID;
         private System.Windows.Forms.ToolStripMenuItem copyStatusClass;
         private System.Windows.Forms.ToolStripMenuItem copyStatusHandle;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem quickResizeAddCustomResolution;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripMenuItem quickResizeDeleteCustomResolution;
     }
 }
 
